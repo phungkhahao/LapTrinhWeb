@@ -1,0 +1,44 @@
+# Cài Homebrew nếu chưa có
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
+# Cài PHP, Composer, Node.js/npm và MySQL
+brew install php composer node mysql
+
+# Kiểm tra
+php -v
+composer -V
+node -v
+npm -v
+mysql --version
+
+# Clone source
+git clone <URL_REPOSITORY_GITHUB_CUA_BAN>
+cd DoAnLapTrinhWeb
+
+# ===== Terminal 1: Laravel Backend =====
+cd hotel-booking-api
+composer install
+cp .env.example .env
+php artisan key:generate
+
+# Mở .env và cấu hình:
+# DB_DATABASE=hotel_booking
+# DB_USERNAME=root
+# DB_PASSWORD=
+
+# Tạo database hotel_booking bằng Navicat trước
+php artisan migrate
+php artisan db:seed
+php artisan storage:link
+php artisan l5-swagger:generate
+php artisan serve
+
+# Backend: http://127.0.0.1:8000
+# Swagger: http://127.0.0.1:8000/api/documentation
+
+# ===== Terminal 2: React Frontend =====
+cd ~/DoAnLapTrinhWeb/hotel-booking-web
+npm install
+npm start
+
+# Frontend: http://localhost:3000

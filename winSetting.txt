@@ -1,0 +1,46 @@
+# Cài Chocolatey nếu máy chưa có
+Set-ExecutionPolicy Bypass -Scope Process -Force
+[System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072
+iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
+
+# Đóng PowerShell, mở lại PowerShell Administrator, rồi cài công cụ
+choco install git php composer nodejs-lts mysql -y
+
+# Kiểm tra
+php -v
+composer -V
+node -v
+npm -v
+mysql --version
+
+# Clone source
+git clone <URL_REPOSITORY_GITHUB_CUA_BAN>
+cd DoAnLapTrinhWeb
+
+# ===== PowerShell 1: Laravel Backend =====
+cd hotel-booking-api
+composer install
+Copy-Item .env.example .env
+php artisan key:generate
+
+# Mở file .env, cấu hình:
+# DB_DATABASE=hotel_booking
+# DB_USERNAME=root
+# DB_PASSWORD=
+
+# Tạo database hotel_booking bằng Navicat trước
+php artisan migrate
+php artisan db:seed
+php artisan storage:link
+php artisan l5-swagger:generate
+php artisan serve
+
+# Backend: http://127.0.0.1:8000
+# Swagger: http://127.0.0.1:8000/api/documentation
+
+# ===== PowerShell 2: React Frontend =====
+cd <DUONG_DAN_DEN>\DoAnLapTrinhWeb\hotel-booking-web
+npm install
+npm start
+
+# Frontend: http://localhost:3000
