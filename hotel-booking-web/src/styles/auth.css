@@ -1,0 +1,218 @@
+.auth-page {
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 1.1fr .9fr;
+    background: #fff
+}
+
+.auth-visual {
+    min-height: 100vh;
+    background: center/cover no-repeat
+}
+
+.auth-login-visual {
+    background-image: url('../assets/hero.jpg')
+}
+
+.auth-register-visual {
+    background-image: url('../assets/hotel-2.jpg')
+}
+
+.auth-overlay {
+    height: 100%;
+    padding: 52px 9%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background: linear-gradient(135deg, rgba(8, 29, 52, .88), rgba(8, 29, 52, .32));
+    color: #fff
+}
+
+.auth-brand {
+    color: #fff;
+    text-decoration: none;
+    font: 700 1.45rem 'Playfair Display', serif;
+    letter-spacing: .04em
+}
+
+.auth-visual-copy {
+    max-width: 580px;
+    margin-bottom: 14vh;
+    animation: fadeUp .6s ease both
+}
+
+.auth-visual-copy p,
+.auth-eyebrow {
+    color: #c79a4b;
+    font-size: .73rem;
+    letter-spacing: .18em;
+    font-weight: 700
+}
+
+.auth-visual-copy h1 {
+    font-size: clamp(2.5rem, 4vw, 4.4rem);
+    margin: .5rem 0 1.1rem;
+    color: #fff
+}
+
+.auth-visual-copy span {
+    display: block;
+    font-size: 1.08rem;
+    line-height: 1.75;
+    max-width: 500px
+}
+
+.auth-visual-copy small {
+    display: block;
+    margin-top: 2rem;
+    color: #f7e7c4
+}
+
+.auth-form-panel {
+    display: grid;
+    place-items: center;
+    padding: 3rem;
+    background: #fff
+}
+
+.auth-form-wrap {
+    width: min(100%, 460px);
+    animation: fadeUp .55s .12s ease both
+}
+
+.back-home {
+    display: inline-block;
+    color: #607087;
+    text-decoration: none;
+    margin-bottom: 3rem;
+    font-weight: 600
+}
+
+.auth-form-wrap h2 {
+    font-size: 2.5rem;
+    margin: .3rem 0
+}
+
+.auth-subtitle {
+    color: #748095;
+    margin-bottom: 2rem
+}
+
+.auth-field {
+    margin-top: 1rem
+}
+
+.auth-form-wrap label {
+    display: block;
+    font-size: .92rem;
+    font-weight: 700;
+    color: #243b53;
+    margin-bottom: .45rem
+}
+
+.password-field {
+    position: relative
+}
+
+.password-field input {
+    padding-right: 58px
+}
+
+.password-field button {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    border: 0;
+    background: transparent;
+    color: #a8782f;
+    font-weight: 700;
+    font-size: .82rem
+}
+
+.auth-submit {
+    width: 100%;
+    margin-top: 1.8rem;
+    padding: .85rem
+}
+
+.auth-divider {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: #9aa5b1;
+    font-size: .82rem;
+    margin: 1.6rem 0
+}
+
+.auth-divider:before,
+.auth-divider:after {
+    content: '';
+    height: 1px;
+    background: #e5e7eb;
+    flex: 1
+}
+
+.auth-switch {
+    text-align: center;
+    color: #607087
+}
+
+.auth-switch a {
+    color: #a8782f;
+    font-weight: 700
+}
+
+.auth-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px
+}
+
+@media(max-width:768px) {
+    .auth-page {
+        display: block
+    }
+
+    .auth-visual {
+        min-height: 260px
+    }
+
+    .auth-overlay {
+        padding: 28px
+    }
+
+    .auth-visual-copy {
+        margin: 3rem 0 0
+    }
+
+    .auth-visual-copy h1 {
+        font-size: 2.2rem
+    }
+
+    .auth-visual-copy small {
+        display: none
+    }
+
+    .auth-form-panel {
+        padding: 2.5rem 1.4rem
+    }
+
+    .auth-form-wrap {
+        max-width: 520px
+    }
+
+    .auth-register-page .auth-visual {
+        display: none
+    }
+}
+
+@media(max-width:430px) {
+    .auth-grid {
+        grid-template-columns: 1fr
+    }
+
+    .auth-form-wrap h2 {
+        font-size: 2.1rem
+    }
+}

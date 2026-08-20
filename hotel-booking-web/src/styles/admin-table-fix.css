@@ -1,0 +1,167 @@
+.admin-table-wrap {
+  overflow-x: auto;
+  overflow-y: visible;
+  padding-bottom: 8px;
+  -webkit-overflow-scrolling: touch;
+}
+.admin-room-table {
+  width: 100%;
+  min-width: 1120px;
+  table-layout: fixed;
+  border-collapse: collapse;
+}
+.admin-booking-table {
+  min-width: 1420px;
+}
+.admin-loai-phong-table {
+  min-width: 1200px;
+}
+.admin-room-table th,
+.admin-room-table td {
+  display: table-cell !important;
+  vertical-align: middle !important;
+}
+.admin-room-table th {
+  white-space: nowrap;
+}
+.admin-room-table td {
+  overflow: hidden;
+}
+.admin-cell-clamp {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-height: 1.45;
+}
+.admin-cell-nowrap {
+  display: inline-block;
+  white-space: nowrap;
+}
+.admin-room-actions,
+.admin-booking-actions {
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  gap: 10px !important;
+  flex-wrap: nowrap !important;
+  min-height: 48px;
+  padding: 2px 0;
+}
+.admin-room-status-group {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+}
+.admin-stay-status {
+  display: inline-flex;
+  align-items: center;
+  width: max-content;
+  border-radius: 999px;
+  padding: 4px 9px;
+  font-size: 0.74rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+.admin-stay-status-occupied {
+  background: #fff1e8;
+  color: #a84d12;
+}
+.admin-stay-status-vacant {
+  background: #eaf7ef;
+  color: #1f6d45;
+}
+.hotel-react-select .hotel-select__control {
+  min-height: 48px;
+  height: 48px;
+  border-color: #d6dce7;
+  border-radius: 9px;
+  box-shadow: none;
+  font-family: Inter, Arial, sans-serif;
+}
+.hotel-react-select .hotel-select__value-container {
+  height: 46px;
+  padding: 0 12px;
+}
+.hotel-react-select .hotel-select__indicators {
+  height: 46px;
+}
+.hotel-react-select .hotel-select__single-value,
+.hotel-react-select .hotel-select__placeholder {
+  margin: 0;
+  line-height: 46px;
+}
+.hotel-react-select .hotel-select__input-container {
+  margin: 0;
+  padding: 0;
+}
+.hotel-react-select .hotel-select__control:hover,
+.hotel-react-select .hotel-select__control--is-focused {
+  border-color: #b99652;
+  box-shadow: 0 0 0 3px rgba(185, 150, 82, 0.14);
+}
+.hotel-react-select.is-invalid .hotel-select__control {
+  border-color: #dc3545;
+}
+.hotel-select__menu {
+  z-index: 2200 !important;
+}
+.hotel-select__option--is-focused {
+  background: #f7f1e5 !important;
+}
+.hotel-select__option--is-selected {
+  background: #0c2946 !important;
+}
+.admin-booking-detail .admin-payment-card {
+  background: linear-gradient(145deg, #f8f3e9, #fff);
+  border: 1px solid #e9dcc0;
+}
+.admin-payment-card .admin-booking-badge {
+  margin-top: 7px;
+}
+.admin-room-toolbar input,
+.admin-room-toolbar button,
+.admin-booking-toolbar input,
+.admin-booking-toolbar button {
+  box-sizing: border-box;
+  height: 48px;
+  min-height: 48px;
+}
+.admin-booking-toolbar {
+  align-items: center;
+}
+.admin-booking-toolbar .hotel-react-select {
+  flex: 1 1 210px;
+  min-width: 210px;
+}
+.booking-widget .form-control,
+.booking-widget .hotel-react-select .hotel-select__control,
+.booking-widget .btn {
+  min-height: 48px;
+  height: 48px;
+}
+.admin-form-grid input:not(.admin-file-input),
+.admin-form-grid select {
+  height: 48px;
+}
+@media (max-width: 1024px) {
+  .admin-booking-toolbar .hotel-react-select {
+    flex-basis: 220px;
+  }
+}
+@media (max-width: 700px) {
+  .admin-room-table {
+    min-width: 980px;
+  }
+  .admin-booking-table {
+    min-width: 1180px;
+  }
+  .admin-booking-toolbar {
+    align-items: stretch;
+  }
+  .admin-booking-toolbar .hotel-react-select {
+    width: 100%;
+    min-width: 0;
+  }
+}

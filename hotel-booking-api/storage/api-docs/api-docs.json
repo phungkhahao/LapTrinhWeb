@@ -1,0 +1,1689 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Hotel Booking API",
+        "description": "REST API cho hệ thống đặt phòng khách sạn.",
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://127.0.0.1:8000",
+            "description": "Local development server"
+        }
+    ],
+    "paths": {
+        "/api/admin/dashboard": {
+            "get": {
+                "tags": [
+                    "Quản trị"
+                ],
+                "summary": "Lấy số liệu dashboard quản trị",
+                "operationId": "5d791593fa555f79374c4860f99705c2",
+                "responses": {
+                    "200": {
+                        "description": "Lấy số liệu dashboard thành công",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Lấy số liệu dashboard thành công"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "tong_so_phong": {
+                                                    "type": "integer",
+                                                    "example": 8
+                                                },
+                                                "so_phong_dang_trong": {
+                                                    "type": "integer",
+                                                    "example": 8
+                                                },
+                                                "tong_so_dat_phong": {
+                                                    "type": "integer",
+                                                    "example": 5
+                                                },
+                                                "so_dat_phong_cho_xac_nhan": {
+                                                    "type": "integer",
+                                                    "example": 3
+                                                },
+                                                "so_dat_phong_da_huy": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "tong_so_khach_hang": {
+                                                    "type": "integer",
+                                                    "example": 12
+                                                },
+                                                "doanh_thu_du_kien": {
+                                                    "type": "number",
+                                                    "example": 5400000
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Chưa xác thực"
+                    },
+                    "403": {
+                        "description": "Không có quyền quản trị"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/admin/dat-phong": {
+            "get": {
+                "tags": [
+                    "Quản trị - Đặt phòng"
+                ],
+                "summary": "Lấy danh sách đặt phòng quản trị",
+                "operationId": "bfc91fc89073a9c2038fac53ca1d8ada",
+                "parameters": [
+                    {
+                        "name": "tim_kiem",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "trang_thai",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "trang_thai_thanh_toan",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lấy danh sách đặt phòng thành công"
+                    },
+                    "401": {
+                        "description": "Chưa xác thực"
+                    },
+                    "403": {
+                        "description": "Không có quyền quản trị"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/admin/dat-phong/{id}": {
+            "get": {
+                "tags": [
+                    "Quản trị - Đặt phòng"
+                ],
+                "summary": "Lấy chi tiết đặt phòng quản trị",
+                "operationId": "f39c6a528de3a535a5a3ec003172b07e",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lấy chi tiết đặt phòng thành công"
+                    },
+                    "404": {
+                        "description": "Không tìm thấy đặt phòng"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/admin/dat-phong/{id}/xac-nhan": {
+            "put": {
+                "tags": [
+                    "Quản trị - Đặt phòng"
+                ],
+                "summary": "Xác nhận đặt phòng",
+                "operationId": "aad1abbf7d36e5bc8f8710bc9be18a4a",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Xác nhận đặt phòng thành công"
+                    },
+                    "404": {
+                        "description": "Không tìm thấy đặt phòng"
+                    },
+                    "422": {
+                        "description": "Không thể xác nhận"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/admin/dat-phong/{id}/huy": {
+            "put": {
+                "tags": [
+                    "Quản trị - Đặt phòng"
+                ],
+                "summary": "Hủy đặt phòng",
+                "operationId": "82ea8914c7865014436caa08d5cef046",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Hủy đặt phòng thành công"
+                    },
+                    "404": {
+                        "description": "Không tìm thấy đặt phòng"
+                    },
+                    "422": {
+                        "description": "Đặt phòng đã hủy"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/admin/dat-phong/{id}/xac-nhan-thanh-toan": {
+            "put": {
+                "tags": [
+                    "Quản trị - Đặt phòng"
+                ],
+                "summary": "Xác nhận thanh toán tại khách sạn",
+                "operationId": "71a284651c17421cc73fcd2941cb0a35",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Xác nhận thanh toán thành công"
+                    },
+                    "404": {
+                        "description": "Không tìm thấy đặt phòng"
+                    },
+                    "422": {
+                        "description": "Không thể xác nhận thanh toán"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/admin/loai-phong": {
+            "get": {
+                "tags": [
+                    "Quản trị - Loại phòng"
+                ],
+                "summary": "Lấy danh sách loại phòng quản trị",
+                "operationId": "d98f33b2936faa316136720ef51ea69f",
+                "parameters": [
+                    {
+                        "name": "tim_kiem",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lấy danh sách loại phòng thành công"
+                    },
+                    "401": {
+                        "description": "Chưa xác thực"
+                    },
+                    "403": {
+                        "description": "Không có quyền quản trị"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Quản trị - Loại phòng"
+                ],
+                "summary": "Thêm loại phòng",
+                "operationId": "37383fdc3965e68e8cd8235d97a046bf",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "ten_loai",
+                                    "gia_co_ban",
+                                    "so_nguoi_toi_da"
+                                ],
+                                "properties": {
+                                    "ten_loai": {
+                                        "type": "string"
+                                    },
+                                    "mo_ta": {
+                                        "type": "string",
+                                        "nullable": true
+                                    },
+                                    "gia_co_ban": {
+                                        "type": "number"
+                                    },
+                                    "so_nguoi_toi_da": {
+                                        "type": "integer"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Thêm loại phòng thành công"
+                    },
+                    "422": {
+                        "description": "Dữ liệu không hợp lệ"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/admin/loai-phong/{id}": {
+            "get": {
+                "tags": [
+                    "Quản trị - Loại phòng"
+                ],
+                "summary": "Lấy chi tiết loại phòng quản trị",
+                "operationId": "3b293d106e08df1001e46503b73b4a03",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lấy chi tiết loại phòng thành công"
+                    },
+                    "404": {
+                        "description": "Không tìm thấy loại phòng"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Quản trị - Loại phòng"
+                ],
+                "summary": "Cập nhật loại phòng",
+                "operationId": "d904cd5ef57aec655b4fcd29e850bd38",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "ten_loai": {
+                                        "type": "string"
+                                    },
+                                    "mo_ta": {
+                                        "type": "string",
+                                        "nullable": true
+                                    },
+                                    "gia_co_ban": {
+                                        "type": "number"
+                                    },
+                                    "so_nguoi_toi_da": {
+                                        "type": "integer"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Cập nhật loại phòng thành công"
+                    },
+                    "404": {
+                        "description": "Không tìm thấy loại phòng"
+                    },
+                    "422": {
+                        "description": "Dữ liệu không hợp lệ"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/admin/loai-phong/{id}/ngung-hoat-dong": {
+            "put": {
+                "tags": [
+                    "Quản trị - Loại phòng"
+                ],
+                "summary": "Ngừng sử dụng loại phòng",
+                "operationId": "b810e26c226e573a9c442fb9ca0821b6",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Đã ngừng sử dụng loại phòng"
+                    },
+                    "404": {
+                        "description": "Không tìm thấy loại phòng"
+                    },
+                    "422": {
+                        "description": "Loại phòng đã ngừng hoạt động"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/admin/loai-phong/{id}/kich-hoat": {
+            "put": {
+                "tags": [
+                    "Quản trị - Loại phòng"
+                ],
+                "summary": "Kích hoạt lại loại phòng",
+                "operationId": "13147b1113bb46210469fba37cf740ad",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Đã kích hoạt lại loại phòng"
+                    },
+                    "404": {
+                        "description": "Không tìm thấy loại phòng"
+                    },
+                    "422": {
+                        "description": "Loại phòng đang hoạt động"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/admin/phong": {
+            "get": {
+                "tags": [
+                    "Quản trị - Phòng"
+                ],
+                "summary": "Lấy danh sách phòng quản trị",
+                "operationId": "e2370dbe9e7419cb0c3eec323e3b8c6a",
+                "parameters": [
+                    {
+                        "name": "tim_kiem",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lấy danh sách phòng thành công"
+                    },
+                    "401": {
+                        "description": "Chưa xác thực"
+                    },
+                    "403": {
+                        "description": "Không có quyền quản trị"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Quản trị - Phòng"
+                ],
+                "summary": "Thêm phòng kèm ảnh",
+                "operationId": "e9a6fb1a9823f9be8537d186aedbc87a",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "required": [
+                                    "so_phong",
+                                    "loai_phong_id",
+                                    "gia_phong",
+                                    "so_nguoi_toi_da"
+                                ],
+                                "properties": {
+                                    "so_phong": {
+                                        "type": "string"
+                                    },
+                                    "loai_phong_id": {
+                                        "type": "integer"
+                                    },
+                                    "ten_phong": {
+                                        "type": "string",
+                                        "nullable": true
+                                    },
+                                    "gia_phong": {
+                                        "type": "number"
+                                    },
+                                    "so_nguoi_toi_da": {
+                                        "type": "integer"
+                                    },
+                                    "mo_ta": {
+                                        "type": "string",
+                                        "nullable": true
+                                    },
+                                    "hinh_anh": {
+                                        "type": "string",
+                                        "format": "binary",
+                                        "nullable": true
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Thêm phòng thành công"
+                    },
+                    "422": {
+                        "description": "Dữ liệu không hợp lệ"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/admin/phong/{id}": {
+            "get": {
+                "tags": [
+                    "Quản trị - Phòng"
+                ],
+                "summary": "Lấy chi tiết phòng quản trị",
+                "operationId": "7e1fe8cfe1d791730d5d8004aa2896a7",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lấy chi tiết phòng thành công"
+                    },
+                    "404": {
+                        "description": "Không tìm thấy phòng"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Quản trị - Phòng"
+                ],
+                "summary": "Cập nhật phòng kèm ảnh",
+                "operationId": "f3ab7e9a6269981d4a4c8291d0b724a7",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "properties": {
+                                    "so_phong": {
+                                        "type": "string"
+                                    },
+                                    "loai_phong_id": {
+                                        "type": "integer"
+                                    },
+                                    "ten_phong": {
+                                        "type": "string",
+                                        "nullable": true
+                                    },
+                                    "gia_phong": {
+                                        "type": "number"
+                                    },
+                                    "so_nguoi_toi_da": {
+                                        "type": "integer"
+                                    },
+                                    "mo_ta": {
+                                        "type": "string",
+                                        "nullable": true
+                                    },
+                                    "hinh_anh": {
+                                        "type": "string",
+                                        "format": "binary",
+                                        "nullable": true
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Cập nhật phòng thành công"
+                    },
+                    "404": {
+                        "description": "Không tìm thấy phòng"
+                    },
+                    "422": {
+                        "description": "Dữ liệu không hợp lệ"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/admin/phong/{id}/ngung-hoat-dong": {
+            "put": {
+                "tags": [
+                    "Quản trị - Phòng"
+                ],
+                "summary": "Ngừng sử dụng phòng",
+                "operationId": "0ceb8a023bb26a614969ce589ac93b1a",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Đã ngừng sử dụng phòng"
+                    },
+                    "404": {
+                        "description": "Không tìm thấy phòng"
+                    },
+                    "422": {
+                        "description": "Phòng đã ngừng hoạt động"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/admin/phong/{id}/kich-hoat": {
+            "put": {
+                "tags": [
+                    "Quản trị - Phòng"
+                ],
+                "summary": "Kích hoạt lại phòng",
+                "operationId": "3d2e1275b3fba8eaf9af34170d035b6f",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Đã kích hoạt lại phòng"
+                    },
+                    "404": {
+                        "description": "Không tìm thấy phòng"
+                    },
+                    "422": {
+                        "description": "Phòng đang hoạt động"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/auth/dang-ky": {
+            "post": {
+                "tags": [
+                    "Xác thực"
+                ],
+                "summary": "Đăng ký tài khoản",
+                "description": "Đăng ký tài khoản khách hàng mới và trả về Sanctum token khi đăng ký thành công.",
+                "operationId": "ec5c55d220c7a328a92f4e653ada3d82",
+                "responses": {
+                    "201": {
+                        "description": "Đăng ký tài khoản thành công"
+                    },
+                    "422": {
+                        "description": "Dữ liệu không hợp lệ"
+                    }
+                }
+            }
+        },
+        "/api/auth/dang-nhap": {
+            "post": {
+                "tags": [
+                    "Xác thực"
+                ],
+                "summary": "Đăng nhập",
+                "operationId": "aa978ac10673006350dfef2bbc9c2533",
+                "responses": {
+                    "200": {
+                        "description": "Đăng nhập thành công"
+                    },
+                    "401": {
+                        "description": "Email hoặc mật khẩu không chính xác."
+                    },
+                    "422": {
+                        "description": "Dữ liệu không hợp lệ"
+                    }
+                }
+            }
+        },
+        "/api/auth/thong-tin": {
+            "get": {
+                "tags": [
+                    "Xác thực"
+                ],
+                "summary": "Lấy thông tin tài khoản",
+                "operationId": "290d527f7adab81d4545ecf9a8381466",
+                "responses": {
+                    "200": {
+                        "description": "Lấy thông tin tài khoản thành công"
+                    },
+                    "401": {
+                        "description": "Chưa xác thực"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/auth/dang-xuat": {
+            "post": {
+                "tags": [
+                    "Xác thực"
+                ],
+                "summary": "Đăng xuất",
+                "operationId": "9336171fd08bd99bb9673b82e5917228",
+                "responses": {
+                    "200": {
+                        "description": "Đăng xuất thành công"
+                    },
+                    "401": {
+                        "description": "Chưa xác thực"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/dat-phong": {
+            "post": {
+                "tags": [
+                    "Đặt phòng"
+                ],
+                "summary": "Đặt phòng",
+                "description": "Tạo đơn đặt phòng mới cho khách vãng lai. Hệ thống kiểm tra lại tình trạng phòng và tự tính tổng tiền trước khi lưu.",
+                "operationId": "c07de610307f3b6fc2e5d15940a42445",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "phong_id",
+                                    "ten_khach_hang",
+                                    "email_khach_hang",
+                                    "so_dien_thoai",
+                                    "ngay_nhan_phong",
+                                    "ngay_tra_phong",
+                                    "so_luong_khach",
+                                    "phuong_thuc_thanh_toan"
+                                ],
+                                "properties": {
+                                    "phong_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "ten_khach_hang": {
+                                        "type": "string",
+                                        "example": "Nguyễn Văn A"
+                                    },
+                                    "email_khach_hang": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "nguyenvana@example.com"
+                                    },
+                                    "so_dien_thoai": {
+                                        "type": "string",
+                                        "example": "0912345678"
+                                    },
+                                    "ngay_nhan_phong": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "2026-08-25"
+                                    },
+                                    "ngay_tra_phong": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "2026-08-28"
+                                    },
+                                    "so_luong_khach": {
+                                        "type": "integer",
+                                        "example": 2
+                                    },
+                                    "ghi_chu": {
+                                        "type": "string",
+                                        "example": "Nhận phòng muộn",
+                                        "nullable": true
+                                    },
+                                    "phuong_thuc_thanh_toan": {
+                                        "description": "Phương thức thanh toán. Hiện tại hỗ trợ thanh toán tại khách sạn.",
+                                        "type": "string",
+                                        "example": "tai_khach_san",
+                                        "enum": [
+                                            "tai_khach_san"
+                                        ]
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Đặt phòng thành công, bao gồm thông tin thanh toán tại khách sạn",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Đặt phòng thành công"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "ma_dat_phong": {
+                                                    "type": "string",
+                                                    "example": "DP202608190001"
+                                                },
+                                                "tong_tien": {
+                                                    "type": "number",
+                                                    "example": 2400000
+                                                },
+                                                "thanh_toan": {
+                                                    "properties": {
+                                                        "phuong_thuc": {
+                                                            "type": "string",
+                                                            "example": "tai_khach_san"
+                                                        },
+                                                        "phuong_thuc_hien_thi": {
+                                                            "type": "string",
+                                                            "example": "Thanh toán tại khách sạn"
+                                                        },
+                                                        "trang_thai": {
+                                                            "type": "string",
+                                                            "example": "chua_thanh_toan"
+                                                        },
+                                                        "trang_thai_hien_thi": {
+                                                            "type": "string",
+                                                            "example": "Chưa thanh toán"
+                                                        },
+                                                        "so_tien": {
+                                                            "type": "number",
+                                                            "example": 2400000
+                                                        }
+                                                    },
+                                                    "type": "object"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Không tìm thấy phòng"
+                    },
+                    "409": {
+                        "description": "Phòng đã được đặt trong khoảng thời gian này"
+                    },
+                    "422": {
+                        "description": "Dữ liệu không hợp lệ"
+                    }
+                }
+            }
+        },
+        "/api/dat-phong-cua-toi": {
+            "get": {
+                "tags": [
+                    "Đặt phòng"
+                ],
+                "summary": "Lấy danh sách đặt phòng của tôi",
+                "description": "Chỉ trả về các đặt phòng thuộc người dùng đang được xác thực bởi Bearer token Sanctum.",
+                "operationId": "9309a3ad924047d98a071129bf6137d8",
+                "responses": {
+                    "200": {
+                        "description": "Lấy danh sách đặt phòng thành công",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Lấy danh sách đặt phòng của bạn thành công"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer",
+                                                        "example": 1
+                                                    },
+                                                    "ma_dat_phong": {
+                                                        "type": "string",
+                                                        "example": "DP202608190001"
+                                                    },
+                                                    "ten_phong": {
+                                                        "type": "string",
+                                                        "example": "Deluxe 201"
+                                                    },
+                                                    "hinh_anh": {
+                                                        "type": "string",
+                                                        "nullable": true
+                                                    },
+                                                    "ngay_nhan_phong": {
+                                                        "type": "string",
+                                                        "format": "date"
+                                                    },
+                                                    "ngay_tra_phong": {
+                                                        "type": "string",
+                                                        "format": "date"
+                                                    },
+                                                    "so_luong_khach": {
+                                                        "type": "integer",
+                                                        "example": 2
+                                                    },
+                                                    "tong_tien": {
+                                                        "type": "number",
+                                                        "example": 1600000
+                                                    },
+                                                    "trang_thai": {
+                                                        "type": "string",
+                                                        "example": "cho_xac_nhan"
+                                                    },
+                                                    "phuong_thuc_thanh_toan": {
+                                                        "type": "string",
+                                                        "example": "tai_khach_san"
+                                                    },
+                                                    "trang_thai_thanh_toan": {
+                                                        "type": "string",
+                                                        "example": "chua_thanh_toan"
+                                                    },
+                                                    "created_at": {
+                                                        "type": "string",
+                                                        "format": "date-time"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Chưa xác thực"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/dat-phong-cua-toi/{id}": {
+            "get": {
+                "tags": [
+                    "Đặt phòng"
+                ],
+                "summary": "Lấy chi tiết đặt phòng của tôi",
+                "description": "Chỉ trả về đặt phòng có ID thuộc người dùng đang được xác thực bởi Bearer token Sanctum.",
+                "operationId": "9e9cc78505e137adfe9b0ed157660759",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": 1
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lấy chi tiết đặt phòng thành công",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Lấy chi tiết đặt phòng thành công"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "ma_dat_phong": {
+                                                    "type": "string",
+                                                    "example": "DP202608190001"
+                                                },
+                                                "ten_phong": {
+                                                    "type": "string",
+                                                    "example": "Deluxe 201"
+                                                },
+                                                "hinh_anh": {
+                                                    "type": "string",
+                                                    "nullable": true
+                                                },
+                                                "ten_khach_hang": {
+                                                    "type": "string",
+                                                    "example": "Nguyễn Văn A"
+                                                },
+                                                "ngay_nhan_phong": {
+                                                    "type": "string",
+                                                    "format": "date"
+                                                },
+                                                "ngay_tra_phong": {
+                                                    "type": "string",
+                                                    "format": "date"
+                                                },
+                                                "so_dem": {
+                                                    "type": "integer",
+                                                    "example": 2
+                                                },
+                                                "tong_tien": {
+                                                    "type": "number",
+                                                    "example": 1600000
+                                                },
+                                                "ghi_chu": {
+                                                    "type": "string",
+                                                    "nullable": true
+                                                },
+                                                "trang_thai": {
+                                                    "type": "string",
+                                                    "example": "cho_xac_nhan"
+                                                },
+                                                "phuong_thuc_thanh_toan": {
+                                                    "type": "string",
+                                                    "example": "tai_khach_san"
+                                                },
+                                                "trang_thai_thanh_toan": {
+                                                    "type": "string",
+                                                    "example": "chua_thanh_toan"
+                                                },
+                                                "created_at": {
+                                                    "type": "string",
+                                                    "format": "date-time"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Chưa xác thực"
+                    },
+                    "404": {
+                        "description": "Không tìm thấy đặt phòng"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/dat-phong-cua-toi/{id}/huy": {
+            "put": {
+                "tags": [
+                    "Đặt phòng"
+                ],
+                "summary": "Hủy đặt phòng của tôi",
+                "description": "Chỉ cho phép hủy đặt phòng thuộc người dùng đang xác thực và còn ở trạng thái chờ xác nhận.",
+                "operationId": "c95ddcbc75931f1c3ff16732acf22fe4",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": 1
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Hủy đặt phòng thành công",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Hủy đặt phòng thành công."
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "trang_thai": {
+                                                    "type": "string",
+                                                    "example": "da_huy"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Chưa xác thực"
+                    },
+                    "404": {
+                        "description": "Không tìm thấy đặt phòng"
+                    },
+                    "422": {
+                        "description": "Đặt phòng không thể hủy"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/dich-vu": {
+            "get": {
+                "tags": [
+                    "Dịch vụ"
+                ],
+                "summary": "Lấy danh sách dịch vụ đang hoạt động",
+                "operationId": "4ac5893e560347320e9f4721ed9e5ed5",
+                "responses": {
+                    "200": {
+                        "description": "Lấy dữ liệu thành công",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Lấy dữ liệu thành công"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/loai-phong": {
+            "get": {
+                "tags": [
+                    "Loại phòng"
+                ],
+                "summary": "Lấy danh sách loại phòng đang hoạt động",
+                "operationId": "6663092edb41f8e0ad8e27529fd06fcf",
+                "responses": {
+                    "200": {
+                        "description": "Lấy dữ liệu thành công",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Lấy dữ liệu thành công"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/phong": {
+            "get": {
+                "tags": [
+                    "Phòng"
+                ],
+                "summary": "Lấy danh sách phòng",
+                "operationId": "c65fb6f9b8dab69da92e29c9fad163fc",
+                "parameters": [
+                    {
+                        "name": "trang_thai",
+                        "in": "query",
+                        "description": "Lọc chính xác theo trạng thái phòng",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "loai_phong_id",
+                        "in": "query",
+                        "description": "Lọc chính xác theo ID loại phòng",
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1
+                        }
+                    },
+                    {
+                        "name": "so_nguoi",
+                        "in": "query",
+                        "description": "Lọc phòng có số người tối đa lớn hơn hoặc bằng giá trị này",
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lấy dữ liệu thành công",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Lấy dữ liệu thành công"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Tham số truy vấn không hợp lệ",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Dữ liệu không hợp lệ"
+                                        },
+                                        "data": {
+                                            "type": "null",
+                                            "example": null
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/phong/tim-kiem": {
+            "get": {
+                "tags": [
+                    "Phòng"
+                ],
+                "summary": "Tìm phòng trống",
+                "description": "Tìm danh sách phòng còn trống theo ngày nhận phòng, ngày trả phòng, số lượng khách và loại phòng.",
+                "operationId": "ee19fa5c264d838919dbb5caeae51149",
+                "parameters": [
+                    {
+                        "name": "ngay_nhan_phong",
+                        "in": "query",
+                        "description": "Ngày nhận phòng",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "date"
+                        },
+                        "example": "2026-08-25"
+                    },
+                    {
+                        "name": "ngay_tra_phong",
+                        "in": "query",
+                        "description": "Ngày trả phòng",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "date"
+                        },
+                        "example": "2026-08-27"
+                    },
+                    {
+                        "name": "so_luong_khach",
+                        "in": "query",
+                        "description": "Số lượng khách",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1
+                        },
+                        "example": 2
+                    },
+                    {
+                        "name": "loai_phong_id",
+                        "in": "query",
+                        "description": "ID loại phòng",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1
+                        },
+                        "example": 1
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Tìm phòng thành công",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Tìm phòng thành công"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Dữ liệu không hợp lệ",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Dữ liệu không hợp lệ"
+                                        },
+                                        "errors": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/phong/{id}": {
+            "get": {
+                "tags": [
+                    "Phòng"
+                ],
+                "summary": "Lấy thông tin chi tiết phòng",
+                "operationId": "651aade5c34d4fab50b0e539f5680a95",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID phòng",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1
+                        },
+                        "example": 1
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lấy thông tin phòng thành công",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Lấy thông tin phòng thành công"
+                                        },
+                                        "data": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Không tìm thấy phòng",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Không tìm thấy phòng"
+                                        },
+                                        "data": {
+                                            "type": "null",
+                                            "example": null
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "securitySchemes": {
+            "sanctum": {
+                "type": "http",
+                "bearerFormat": "Bearer Token",
+                "scheme": "bearer"
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Quản trị",
+            "description": "Quản trị"
+        },
+        {
+            "name": "Quản trị - Đặt phòng",
+            "description": "Quản trị - Đặt phòng"
+        },
+        {
+            "name": "Quản trị - Loại phòng",
+            "description": "Quản trị - Loại phòng"
+        },
+        {
+            "name": "Quản trị - Phòng",
+            "description": "Quản trị - Phòng"
+        },
+        {
+            "name": "Xác thực",
+            "description": "Xác thực"
+        },
+        {
+            "name": "Đặt phòng",
+            "description": "Đặt phòng"
+        },
+        {
+            "name": "Dịch vụ",
+            "description": "Dịch vụ"
+        },
+        {
+            "name": "Loại phòng",
+            "description": "Loại phòng"
+        },
+        {
+            "name": "Phòng",
+            "description": "Phòng"
+        }
+    ]
+}

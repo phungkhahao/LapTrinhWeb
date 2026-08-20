@@ -1,0 +1,33 @@
+.admin-topbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.admin-logout-button {
+  border: 1px solid #d6dce2;
+  border-radius: 8px;
+  background: #fff;
+  color: #526679;
+  padding: 9px 12px;
+  font:
+    700 0.82rem Inter,
+    sans-serif;
+  transition:
+    border-color 0.2s,
+    color 0.2s,
+    background 0.2s;
+}
+.admin-logout-button:hover {
+  border-color: #a84c42;
+  background: #fff7f6;
+  color: #a84c42;
+}
+@media (max-width: 700px) {
+  .admin-topbar-actions {
+    gap: 8px;
+  }
+  .admin-logout-button {
+    padding: 8px 10px;
+    font-size: 0.75rem;
+  }
+}
