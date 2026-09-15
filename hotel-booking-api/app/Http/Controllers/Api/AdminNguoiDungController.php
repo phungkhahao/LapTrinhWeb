@@ -17,7 +17,7 @@ class AdminNguoiDungController extends Controller
         $validator = Validator::make($request->query(), ['tim_kiem' => ['nullable', 'string', 'max:255'], 'page' => ['nullable', 'integer', 'min:1']], ['tim_kiem.string' => 'Từ khóa tìm kiếm không hợp lệ.', 'page.integer' => 'Trang không hợp lệ.']);
         if ($validator->fails()) return response()->json(['success' => false, 'message' => 'Dữ liệu không hợp lệ.', 'errors' => $validator->errors()], 422, options: JSON_UNESCAPED_UNICODE);
         $timKiem = trim((string) ($validator->validated()['tim_kiem'] ?? ''));
-        $data = DB::table('nguoi_dung as nd')->select(['nd.id', 'nd.ho_ten', 'nd.email', 'nd.so_dien_thoai', 'nd.vai_tro', 'nd.trang_thai', 'nd.created_at'])
+        $data = DB::table('nguoi_dung as nd')->where('nd.vai_tro', 'khach_hang')->select(['nd.id', 'nd.ho_ten', 'nd.email', 'nd.so_dien_thoai', 'nd.vai_tro', 'nd.trang_thai', 'nd.created_at'])
             ->selectRaw('(SELECT COUNT(*) FROM dat_phong dp WHERE dp.nguoi_dung_id = nd.id) as so_luong_dat_phong')
             ->when($timKiem !== '', fn ($query) => $query->where(fn ($q) => $q->where('nd.ho_ten', 'like', "%{$timKiem}%")->orWhere('nd.email', 'like', "%{$timKiem}%")->orWhere('nd.so_dien_thoai', 'like', "%{$timKiem}%")))
             ->orderByDesc('nd.created_at')->paginate(10);
@@ -27,7 +27,7 @@ class AdminNguoiDungController extends Controller
     #[OA\Get(path: '/api/admin/nguoi-dung/{id}', summary: 'Lấy chi tiết người dùng', tags: ['Quản trị - Người dùng'], security: [['sanctum' => []]], parameters: [new OA\Parameter(name: 'id', in: 'path', required: true, schema: new OA\Schema(type: 'integer'))], responses: [new OA\Response(response: 200, description: 'Lấy chi tiết người dùng thành công'), new OA\Response(response: 404, description: 'Không tìm thấy người dùng')])]
     public function show(int $id): JsonResponse
     {
-        $nguoiDung = DB::table('nguoi_dung as nd')->where('nd.id', $id)->select(['nd.id', 'nd.ho_ten', 'nd.email', 'nd.so_dien_thoai', 'nd.vai_tro', 'nd.trang_thai', 'nd.created_at'])->selectRaw('(SELECT COUNT(*) FROM dat_phong dp WHERE dp.nguoi_dung_id = nd.id) as so_luong_dat_phong')->first();
+        $nguoiDung = DB::table('nguoi_dung as nd')->where('nd.id', $id)->where('nd.vai_tro', 'khach_hang')->select(['nd.id', 'nd.ho_ten', 'nd.email', 'nd.so_dien_thoai', 'nd.vai_tro', 'nd.trang_thai', 'nd.created_at'])->selectRaw('(SELECT COUNT(*) FROM dat_phong dp WHERE dp.nguoi_dung_id = nd.id) as so_luong_dat_phong')->first();
         return $nguoiDung ? response()->json(['success' => true, 'message' => 'Lấy chi tiết người dùng thành công.', 'data' => $nguoiDung], options: JSON_UNESCAPED_UNICODE) : $this->khongTimThay();
     }
 

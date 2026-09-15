@@ -15,6 +15,7 @@ use App\Http\Controllers\Api\AdminNguoiDungController;
 use App\Http\Controllers\Api\AdminDichVuController;
 use App\Http\Controllers\Api\LienHeController;
 use App\Http\Controllers\Api\AdminLienHeController;
+use App\Http\Controllers\Api\AdminQuanTriVienController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/loai-phong', [LoaiPhongController::class, 'index']);
@@ -59,6 +60,9 @@ Route::middleware(['auth:sanctum', 'tai_khoan_hoat_dong', 'admin'])->group(funct
     Route::get('/admin/nguoi-dung', [AdminNguoiDungController::class, 'index']);
     Route::get('/admin/nguoi-dung/{id}', [AdminNguoiDungController::class, 'show'])->whereNumber('id');
     Route::put('/admin/nguoi-dung/{id}/trang-thai', [AdminNguoiDungController::class, 'capNhatTrangThai'])->whereNumber('id');
+    Route::get('/admin/quan-tri-vien', [AdminQuanTriVienController::class, 'index']);
+    Route::post('/admin/quan-tri-vien', [AdminQuanTriVienController::class, 'store']);
+    Route::put('/admin/quan-tri-vien/{id}', [AdminQuanTriVienController::class, 'update'])->whereNumber('id');
     Route::get('/admin/dich-vu', [AdminDichVuController::class, 'index']);
     Route::post('/admin/dich-vu', [AdminDichVuController::class, 'store']);
     Route::get('/admin/dich-vu/{id}', [AdminDichVuController::class, 'show'])->whereNumber('id');

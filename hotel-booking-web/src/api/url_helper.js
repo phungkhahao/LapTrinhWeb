@@ -26,3 +26,4 @@ export const GET_ADMIN_NGUOI_DUNG = '/admin/nguoi-dung';
 export const GET_ADMIN_DICH_VU = '/admin/dich-vu';
 export const POST_LIEN_HE = '/lien-he';
 export const GET_ADMIN_LIEN_HE = '/admin/lien-he';
+export const GET_ADMIN_QUAN_TRI_VIEN = '/admin/quan-tri-vien';

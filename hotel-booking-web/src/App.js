@@ -16,6 +16,7 @@ import DangKy from './pages/DangKy';
 import HoSoCaNhan from './pages/HoSoCaNhan';
 import LienHe from './pages/LienHe';
 import AdminLienHe from './pages/admin/AdminLienHe';
+import AdminQuanTriVien from './pages/admin/AdminQuanTriVien';
 import './App.css';
 import './styles/ui-normalize.css';
 import './styles/admin-table-fix.css';
@@ -42,6 +43,7 @@ function App() {
       <Route path="/ho-so" element={<HoSoCaNhan />} />
       <Route path="/lien-he" element={<LienHe />} />
       <Route path="/admin/lien-he" element={<AdminLienHe />} />
+      <Route path="/admin/quan-tri-vien" element={<AdminQuanTriVien />} />
     </Routes>
   );
 }

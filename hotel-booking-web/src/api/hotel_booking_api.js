@@ -54,3 +54,6 @@ export const postLienHe = (data) => post(url.POST_LIEN_HE, data);
 export const getAdminLienHe = (data = {}) => getWithParams(url.GET_ADMIN_LIEN_HE, { params: data });
 export const getChiTietAdminLienHe = (id) => getWithParams(`${url.GET_ADMIN_LIEN_HE}/${id}`);
 export const putTrangThaiAdminLienHe = (id, data) => put(`${url.GET_ADMIN_LIEN_HE}/${id}/trang-thai`, data);
+export const getAdminQuanTriVien = (data = {}) => getWithParams(url.GET_ADMIN_QUAN_TRI_VIEN, { params: data });
+export const postAdminQuanTriVien = (data) => post(url.GET_ADMIN_QUAN_TRI_VIEN, data);
+export const putAdminQuanTriVien = (id, data) => put(`${url.GET_ADMIN_QUAN_TRI_VIEN}/${id}`, data);

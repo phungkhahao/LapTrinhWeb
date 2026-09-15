@@ -1280,6 +1280,76 @@
                 ]
             }
         },
+        "/api/admin/quan-tri-vien": {
+            "get": {
+                "tags": [
+                    "Quản trị - Quản trị viên"
+                ],
+                "summary": "Lấy danh sách quản trị viên",
+                "operationId": "3534543f0c81f77b8ecb4c80f8a9892a",
+                "responses": {
+                    "200": {
+                        "description": "Thành công"
+                    },
+                    "401": {
+                        "description": "Chưa xác thực"
+                    },
+                    "403": {
+                        "description": "Không có quyền"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Quản trị - Quản trị viên"
+                ],
+                "summary": "Thêm quản trị viên",
+                "operationId": "237fe100ca964aa34fbedaa928b41f15",
+                "responses": {
+                    "201": {
+                        "description": "Thêm thành công"
+                    },
+                    "422": {
+                        "description": "Dữ liệu không hợp lệ"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/admin/quan-tri-vien/{id}": {
+            "put": {
+                "tags": [
+                    "Quản trị - Quản trị viên"
+                ],
+                "summary": "Cập nhật quản trị viên",
+                "operationId": "e32488ef707188b27daa0d2b19c3c28f",
+                "responses": {
+                    "200": {
+                        "description": "Cập nhật thành công"
+                    },
+                    "404": {
+                        "description": "Không tìm thấy"
+                    },
+                    "422": {
+                        "description": "Dữ liệu không hợp lệ"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
         "/api/auth/dang-ky": {
             "post": {
                 "tags": [
@@ -2389,6 +2459,10 @@
         {
             "name": "Quản trị - Phòng",
             "description": "Quản trị - Phòng"
+        },
+        {
+            "name": "Quản trị - Quản trị viên",
+            "description": "Quản trị - Quản trị viên"
         },
         {
             "name": "Xác thực",

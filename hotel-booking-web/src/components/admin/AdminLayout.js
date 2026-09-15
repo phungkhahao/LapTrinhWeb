@@ -108,6 +108,7 @@ function AdminLayout({ title, activeMenu, children }) {
             Liên hệ
           </Link>
           <Link to="/admin/nguoi-dung" className={activeMenu === "nguoi-dung" ? "admin-nav-active admin-nav-link" : "admin-nav-link"}>Người dùng</Link>
+          <Link to="/admin/quan-tri-vien" className={activeMenu === "quan-tri-vien" ? "admin-nav-active admin-nav-link" : "admin-nav-link"}>Quản trị viên</Link>
         </nav>
         <p className="admin-sidebar-note">Bảng điều khiển quản trị khách sạn</p>
       </aside>
