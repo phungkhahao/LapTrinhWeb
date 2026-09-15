@@ -388,7 +388,7 @@ function AdminDatPhong() {
                     {chiTiet.so_dem} đêm · {chiTiet.so_luong_khach} khách
                   </p>
                 </section>
-                <section className="admin-payment-card">
+                <section className="admin-payment-card admin-booking-payment-detail">
                   <h3>Thanh toán</h3>
                   <p>
                     Phương thức: <b>Thanh toán tại khách sạn</b>
@@ -400,11 +400,20 @@ function AdminDatPhong() {
                       : "Chưa thu tiền"}
                   </p>
                 </section>
-                <section className="admin-detail-full admin-booking-services">
-                  <h3>Dịch vụ bổ sung</h3>
-                  {(chiTiet.dich_vu || []).length === 0 ? (
-                    <p>Không sử dụng dịch vụ bổ sung.</p>
-                  ) : (
+                <section className="admin-booking-total-detail">
+                  <h3>Tổng thanh toán</h3>
+                  <div className="admin-detail-breakdown">
+                    <span>Tiền phòng <b>{tien.format(chiTiet.tien_phong ?? chiTiet.tong_tien)} VNĐ</b></span>
+                    <span>Tiền dịch vụ <b>{tien.format(chiTiet.tien_dich_vu || 0)} VNĐ</b></span>
+                  </div>
+                  <strong className="admin-detail-money">
+                    {tien.format(chiTiet.tong_tien)} VNĐ
+                  </strong>
+                  <p>{badgeBooking(chiTiet.trang_thai)}</p>
+                </section>
+                {(chiTiet.dich_vu || []).length > 0 && (
+                  <section className="admin-detail-full admin-booking-services">
+                    <h3>Dịch vụ bổ sung</h3>
                     <div className="admin-service-lines">
                       {chiTiet.dich_vu.map((dichVu) => (
                         <div key={dichVu.dich_vu_id}>
@@ -414,16 +423,8 @@ function AdminDatPhong() {
                         </div>
                       ))}
                     </div>
-                  )}
-                </section>
-                <section>
-                  <h3>Tổng thanh toán</h3>
-                  <p className="admin-detail-breakdown">Tiền phòng <b>{tien.format(chiTiet.tien_phong ?? chiTiet.tong_tien)} VNĐ</b><br />Tiền dịch vụ <b>{tien.format(chiTiet.tien_dich_vu || 0)} VNĐ</b></p>
-                  <strong className="admin-detail-money">
-                    {tien.format(chiTiet.tong_tien)} VNĐ
-                  </strong>
-                  <p>{badgeBooking(chiTiet.trang_thai)}</p>
-                </section>
+                  </section>
+                )}
                 <section className="admin-detail-full">
                   <h3>Ghi chú</h3>
                   <p>{chiTiet.ghi_chu || "Không có ghi chú."}</p>

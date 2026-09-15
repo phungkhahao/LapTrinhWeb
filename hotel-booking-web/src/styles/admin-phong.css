@@ -451,7 +451,27 @@
 .admin-service-lines span { color: #697586; font-size: .82rem; white-space: nowrap; }
 .admin-service-lines b { color: #102a43; white-space: nowrap; }
 .admin-detail-breakdown { display: grid; gap: 4px; }
-.admin-detail-breakdown b { float: right; color: #102a43; white-space: nowrap; }
+.admin-detail-breakdown span {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+.admin-detail-breakdown b { color: #102a43; white-space: nowrap; }
+.admin-booking-payment-detail,
+.admin-booking-total-detail {
+  min-height: 168px;
+}
+.admin-booking-total-detail {
+  display: flex;
+  flex-direction: column;
+}
+.admin-booking-total-detail .admin-detail-money {
+  margin-top: auto;
+}
+.admin-booking-total-detail > p:last-child {
+  margin-top: 8px;
+}
 .admin-detail-full {
   grid-column: 1/-1;
 }
