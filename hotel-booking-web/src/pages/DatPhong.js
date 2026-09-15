@@ -8,7 +8,7 @@ import {
 import Swal from "sweetalert2";
 import Footer from "../components/Footer";
 import Header from "../components/Header";
-import { getChiTietPhong, postDatPhong } from "../api/hotel_booking_api";
+import { getChiTietPhong, getDanhSachDichVu, postDatPhong } from "../api/hotel_booking_api";
 
 const dinhDangTien = new Intl.NumberFormat("vi-VN");
 const ngayHienTai = new Date().toISOString().slice(0, 10);
@@ -32,6 +32,8 @@ function DatPhong() {
   const [dangGui, setDangGui] = useState(false);
   const [loiTaiPhong, setLoiTaiPhong] = useState("");
   const [errors, setErrors] = useState({});
+  const [dichVus, setDichVus] = useState([]);
+  const [dichVuDaChon, setDichVuDaChon] = useState([]);
   const [form, setForm] = useState({
     ten_khach_hang: "",
     email_khach_hang: "",
@@ -69,12 +71,22 @@ function DatPhong() {
 
     taiPhong();
   }, [id, navigate]);
+  useEffect(() => { getDanhSachDichVu().then((r) => setDichVus(r.data || [])).catch(() => setDichVus([])); }, []);
 
   const soDem = useMemo(
     () => tinhSoDem(form.ngay_nhan_phong, form.ngay_tra_phong),
     [form.ngay_nhan_phong, form.ngay_tra_phong],
   );
-  const tongTienDuKien = phong ? soDem * Number(phong.gia_phong) : 0;
+  const dichVuDaChonDayDu = useMemo(
+    () => dichVus.filter((dichVu) => dichVuDaChon.includes(dichVu.id)),
+    [dichVus, dichVuDaChon],
+  );
+  const tienPhongDuKien = phong ? soDem * Number(phong.gia_phong) : 0;
+  const tienDichVu = dichVuDaChonDayDu.reduce(
+    (tong, dichVu) => tong + Number(dichVu.gia),
+    0,
+  );
+  const tongTienDuKien = tienPhongDuKien + tienDichVu;
   const anhMacDinh = phong
     ? `/hotel-template/${((phong.id - 1) % 8) + 1}.jpg`
     : "";
@@ -83,6 +95,13 @@ function DatPhong() {
     const { name, value } = event.target;
     setForm((giaTriCu) => ({ ...giaTriCu, [name]: value }));
     setErrors((loiCu) => ({ ...loiCu, [name]: "" }));
+  };
+  const toggleDichVu = (dichVuId) => {
+    setDichVuDaChon((danhSachCu) =>
+      danhSachCu.includes(dichVuId)
+        ? danhSachCu.filter((idDaChon) => idDaChon !== dichVuId)
+        : [...danhSachCu, dichVuId],
+    );
   };
 
   const validate = () => {
@@ -131,6 +150,7 @@ function DatPhong() {
         so_luong_khach: Number(form.so_luong_khach),
         ghi_chu: form.ghi_chu.trim() || null,
         phuong_thuc_thanh_toan: form.phuong_thuc_thanh_toan,
+        dich_vu_ids: dichVuDaChon,
       });
 
       if (!response.success) throw new Error(response.message);
@@ -378,7 +398,19 @@ function DatPhong() {
                   </div>
                 </section>
                 <section className="booking-section">
-                  <span className="booking-step">03</span>
+                  <span className="booking-step">03</span><h2>Dịch vụ bổ sung</h2>
+                  {dichVus.length === 0 ? <p>Hiện chưa có dịch vụ bổ sung.</p> : <div className="booking-service-options">{dichVus.map((dichVu) => {
+                    const daChon = dichVuDaChon.includes(dichVu.id);
+                    return <label className={`booking-service-option ${daChon ? "is-selected" : ""}`} key={dichVu.id}>
+                      <input className="booking-service-checkbox" type="checkbox" checked={daChon} onChange={() => toggleDichVu(dichVu.id)} />
+                      <span className="booking-service-checkmark" aria-hidden="true">✓</span>
+                      <span className="booking-service-content"><strong>{dichVu.ten_dich_vu}</strong><small>{dichVu.mo_ta || "Dịch vụ tiện ích"}</small></span>
+                      <b>{dinhDangTien.format(dichVu.gia)} VNĐ</b>
+                    </label>;
+                  })}</div>}
+                </section>
+                <section className="booking-section">
+                  <span className="booking-step">04</span>
                   <h2>Phương thức thanh toán</h2>
                   <div
                     className={`payment-option mb-4 ${errors.phuong_thuc_thanh_toan ? "border border-danger" : ""}`}
@@ -447,8 +479,20 @@ function DatPhong() {
                   <span>Giá / đêm</span>
                   <b>{dinhDangTien.format(phong.gia_phong)} VNĐ</b>
                 </div>
+                <div className="booking-summary-services">
+                  <span>Dịch vụ bổ sung</span>
+                  {dichVuDaChonDayDu.length === 0 ? <small>Chưa chọn dịch vụ</small> : dichVuDaChonDayDu.map((dichVu) => <div key={dichVu.id}><em>{dichVu.ten_dich_vu}</em><b>{dinhDangTien.format(dichVu.gia)} VNĐ</b></div>)}
+                </div>
+                <div className="summary-line">
+                  <span>Tiền phòng</span>
+                  <b>{dinhDangTien.format(tienPhongDuKien)} VNĐ</b>
+                </div>
+                <div className="summary-line">
+                  <span>Tiền dịch vụ</span>
+                  <b>{dinhDangTien.format(tienDichVu)} VNĐ</b>
+                </div>
                 <div className="summary-total">
-                  <span>TỔNG CỘNG</span>
+                  <span>TỔNG THANH TOÁN</span>
                   <strong>{dinhDangTien.format(tongTienDuKien)} VNĐ</strong>
                 </div>
               </aside>

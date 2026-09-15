@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\DatPhong;
 use App\Models\Phong;
 use App\Models\ThanhToan;
+use App\Models\DichVu;
+use App\Models\DichVuDatPhong;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -32,6 +34,7 @@ class DatPhongController extends Controller
                 new OA\Property(property: 'ngay_tra_phong', type: 'string', format: 'date', example: '2026-08-28'),
                 new OA\Property(property: 'so_luong_khach', type: 'integer', example: 2),
                 new OA\Property(property: 'ghi_chu', type: 'string', nullable: true, example: 'Nhận phòng muộn'),
+                new OA\Property(property: 'dich_vu_ids', type: 'array', items: new OA\Items(type: 'integer'), nullable: true),
                 new OA\Property(property: 'phuong_thuc_thanh_toan', type: 'string', enum: ['tai_khach_san'], example: 'tai_khach_san', description: 'Phương thức thanh toán. Hiện tại hỗ trợ thanh toán tại khách sạn.'),
             ],
         )),
@@ -74,6 +77,8 @@ class DatPhongController extends Controller
             'ngay_tra_phong' => ['required', 'date', 'after:ngay_nhan_phong'],
             'so_luong_khach' => ['required', 'integer', 'min:1'],
             'ghi_chu' => ['nullable', 'string'],
+            'dich_vu_ids' => ['nullable', 'array'],
+            'dich_vu_ids.*' => ['integer', 'distinct'],
             'phuong_thuc_thanh_toan' => ['required', 'in:tai_khach_san'],
         ], [
             'phong_id.required' => 'Phòng là bắt buộc.',
@@ -130,8 +135,13 @@ class DatPhongController extends Controller
                 if ($daTrungLich)
                     return ['loai' => 'trung_lich'];
 
+                $dichVuIds = $duLieu['dich_vu_ids'] ?? [];
+                $dichVus = DichVu::query()->whereIn('id', $dichVuIds)->where('trang_thai', 'hoat_dong')->get(['id', 'ten_dich_vu', 'gia']);
+                if ($dichVus->count() !== count($dichVuIds)) return ['loai' => 'dich_vu_khong_hop_le'];
                 $soDem = Carbon::parse($duLieu['ngay_nhan_phong'])->diffInDays(Carbon::parse($duLieu['ngay_tra_phong']));
-                $tongTien = $soDem * (float) $phong->gia_phong;
+                $tienPhong = $soDem * (float) $phong->gia_phong;
+                $tienDichVu = (float) $dichVus->sum('gia');
+                $tongTien = $tienPhong + $tienDichVu;
                 $datPhong = DatPhong::query()->create([
                     'ma_dat_phong' => $this->taoMaDatPhong(),
                     'nguoi_dung_id' => $nguoiDungId,
@@ -154,6 +164,7 @@ class DatPhongController extends Controller
                     'ma_giao_dich' => null,
                     'thoi_gian_thanh_toan' => null,
                 ]);
+                foreach ($dichVus as $dichVu) DichVuDatPhong::query()->create(['dat_phong_id' => $datPhong->id, 'dich_vu_id' => $dichVu->id, 'so_luong' => 1, 'don_gia' => $dichVu->gia]);
 
                 return [
                     'loai' => 'thanh_cong',
@@ -168,7 +179,10 @@ class DatPhongController extends Controller
                         'so_dem' => $soDem,
                         'so_luong_khach' => $duLieu['so_luong_khach'],
                         'gia_phong' => (float) $phong->gia_phong,
+                        'tien_phong' => $tienPhong,
+                        'tien_dich_vu' => $tienDichVu,
                         'tong_tien' => $tongTien,
+                        'dich_vu' => $dichVus->map(fn ($dichVu) => ['id' => $dichVu->id, 'ten_dich_vu' => $dichVu->ten_dich_vu, 'don_gia' => (float) $dichVu->gia]),
                         'trang_thai' => 'cho_xac_nhan',
                         'trang_thai_hien_thi' => 'Chờ xác nhận',
                         'thanh_toan' => [
@@ -188,6 +202,7 @@ class DatPhongController extends Controller
                 'vuot_suc_chua' => response()->json(['success' => false, 'message' => 'Số lượng khách vượt quá sức chứa tối đa của phòng.', 'data' => null], 422, options: JSON_UNESCAPED_UNICODE),
                 'phong_khong_the_dat' => response()->json(['success' => false, 'message' => 'Phòng hiện không thể đặt.', 'data' => null], 422, options: JSON_UNESCAPED_UNICODE),
                 'trung_lich' => response()->json(['success' => false, 'message' => 'Phòng đã được đặt trong khoảng thời gian này. Vui lòng chọn phòng khác.', 'data' => null], 409, options: JSON_UNESCAPED_UNICODE),
+                'dich_vu_khong_hop_le' => response()->json(['success' => false, 'message' => 'Có dịch vụ không tồn tại hoặc đã ngừng hoạt động.', 'data' => null], 422, options: JSON_UNESCAPED_UNICODE),
                 default => response()->json(['success' => true, 'message' => 'Đặt phòng thành công', 'data' => $ketQua['data']], 201, options: JSON_UNESCAPED_UNICODE),
             };
         } catch (\Throwable) {

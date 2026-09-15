@@ -29,14 +29,16 @@
   background: #c79a4b;
   color: #fff;
   font:
-    700 1rem "Playfair Display",
-    serif;
+    700 1rem Inter,
+    Arial,
+    sans-serif;
 }
 .admin-brand strong {
   display: block;
   font:
-    700 1.1rem "Playfair Display",
-    serif;
+    700 1.1rem Inter,
+    Arial,
+    sans-serif;
 }
 .admin-brand small {
   display: block;
@@ -192,8 +194,9 @@
   margin: 13px 0 7px;
   color: #102a43;
   font:
-    700 2rem "Playfair Display",
-    serif;
+    700 2rem Inter,
+    Arial,
+    sans-serif;
 }
 .admin-stat-card p {
   margin: 0;
@@ -218,8 +221,9 @@
   margin: 9px 0;
   color: #fff;
   font:
-    700 clamp(1.7rem, 3vw, 2.4rem) "Playfair Display",
-    serif;
+    700 clamp(1.7rem, 3vw, 2.4rem) Inter,
+    Arial,
+    sans-serif;
 }
 .admin-revenue-card p {
   margin: 0;
@@ -271,8 +275,9 @@
 }
 .admin-error strong {
   font:
-    700 1.35rem "Playfair Display",
-    serif;
+    700 1.35rem Inter,
+    Arial,
+    sans-serif;
 }
 .admin-error p {
   color: #6b7280;

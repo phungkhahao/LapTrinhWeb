@@ -31,7 +31,7 @@
 .auth-brand {
     color: #fff;
     text-decoration: none;
-    font: 700 1.45rem 'Playfair Display', serif;
+    font: 700 1.45rem Inter, Arial, sans-serif;
     letter-spacing: .04em
 }
 

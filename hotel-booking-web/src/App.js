@@ -9,8 +9,13 @@ import AdminDashboard from './pages/admin/AdminDashboard';
 import AdminPhong from './pages/admin/AdminPhong';
 import AdminLoaiPhong from './pages/admin/AdminLoaiPhong';
 import AdminDatPhong from './pages/admin/AdminDatPhong';
+import AdminNguoiDung from './pages/admin/AdminNguoiDung';
+import AdminDichVu from './pages/admin/AdminDichVu';
 import DangNhap from './pages/DangNhap';
 import DangKy from './pages/DangKy';
+import HoSoCaNhan from './pages/HoSoCaNhan';
+import LienHe from './pages/LienHe';
+import AdminLienHe from './pages/admin/AdminLienHe';
 import './App.css';
 import './styles/ui-normalize.css';
 import './styles/admin-table-fix.css';
@@ -30,8 +35,13 @@ function App() {
       <Route path="/admin/phong" element={<AdminPhong />} />
       <Route path="/admin/loai-phong" element={<AdminLoaiPhong />} />
       <Route path="/admin/dat-phong" element={<AdminDatPhong />} />
+      <Route path="/admin/nguoi-dung" element={<AdminNguoiDung />} />
+      <Route path="/admin/dich-vu" element={<AdminDichVu />} />
       <Route path="/dang-nhap" element={<DangNhap />} />
       <Route path="/dang-ky" element={<DangKy />} />
+      <Route path="/ho-so" element={<HoSoCaNhan />} />
+      <Route path="/lien-he" element={<LienHe />} />
+      <Route path="/admin/lien-he" element={<AdminLienHe />} />
     </Routes>
   );
 }

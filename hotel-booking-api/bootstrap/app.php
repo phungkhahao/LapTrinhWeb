@@ -13,8 +13,10 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
+        $middleware->redirectGuestsTo(fn () => null);
         $middleware->alias([
             'admin' => \App\Http\Middleware\AdminMiddleware::class,
+            'tai_khoan_hoat_dong' => \App\Http\Middleware\TaiKhoanHoatDongMiddleware::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

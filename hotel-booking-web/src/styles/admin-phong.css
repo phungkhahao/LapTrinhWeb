@@ -443,6 +443,15 @@
   line-height: 1.65;
   color: #52657a;
 }
+.admin-contact-message { overflow-wrap: anywhere; white-space: pre-wrap; }
+.admin-booking-services { grid-column: 1 / -1; }
+.admin-service-lines { display: grid; }
+.admin-service-lines > div { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; align-items: center; gap: 16px; padding: 10px 0; border-top: 1px dashed #dce2e7; }
+.admin-service-lines > div:first-child { padding-top: 0; border-top: 0; }
+.admin-service-lines span { color: #697586; font-size: .82rem; white-space: nowrap; }
+.admin-service-lines b { color: #102a43; white-space: nowrap; }
+.admin-detail-breakdown { display: grid; gap: 4px; }
+.admin-detail-breakdown b { float: right; color: #102a43; white-space: nowrap; }
 .admin-detail-full {
   grid-column: 1/-1;
 }
@@ -485,6 +494,8 @@
   .admin-booking-detail {
     grid-template-columns: 1fr;
   }
+  .admin-service-lines > div { grid-template-columns: 1fr auto; gap: 5px 12px; }
+  .admin-service-lines span { grid-column: 1 / -1; }
   .admin-form-full,
   .admin-detail-full {
     grid-column: auto;

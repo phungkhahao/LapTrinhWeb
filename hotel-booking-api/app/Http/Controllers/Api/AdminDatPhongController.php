@@ -12,16 +12,16 @@ use OpenApi\Attributes as OA;
 
 class AdminDatPhongController extends Controller
 {
-    #[OA\Get(path: '/api/admin/dat-phong', summary: 'Lấy danh sách đặt phòng quản trị', tags: ['Quản trị - Đặt phòng'], security: [['sanctum' => []]], parameters: [new OA\Parameter(name: 'tim_kiem', in: 'query', schema: new OA\Schema(type: 'string')), new OA\Parameter(name: 'trang_thai', in: 'query', schema: new OA\Schema(type: 'string')), new OA\Parameter(name: 'trang_thai_thanh_toan', in: 'query', schema: new OA\Schema(type: 'string'))], responses: [new OA\Response(response: 200, description: 'Lấy danh sách đặt phòng thành công'), new OA\Response(response: 401, description: 'Chưa xác thực'), new OA\Response(response: 403, description: 'Không có quyền quản trị')])]
+    #[OA\Get(path: '/api/admin/dat-phong', summary: 'Lấy danh sách đặt phòng quản trị', tags: ['Quản trị - Đặt phòng'], security: [['sanctum' => []]], parameters: [new OA\Parameter(name: 'tim_kiem', in: 'query', schema: new OA\Schema(type: 'string')), new OA\Parameter(name: 'trang_thai', in: 'query', schema: new OA\Schema(type: 'string')), new OA\Parameter(name: 'trang_thai_thanh_toan', in: 'query', schema: new OA\Schema(type: 'string')), new OA\Parameter(name: 'page', in: 'query', schema: new OA\Schema(type: 'integer')), new OA\Parameter(name: 'per_page', in: 'query', schema: new OA\Schema(type: 'integer', maximum: 50))], responses: [new OA\Response(response: 200, description: 'Lấy danh sách đặt phòng thành công'), new OA\Response(response: 401, description: 'Chưa xác thực'), new OA\Response(response: 403, description: 'Không có quyền quản trị')])]
     public function index(Request $request): JsonResponse
     {
-        $validator = Validator::make($request->query(), ['tim_kiem' => ['nullable', 'string', 'max:255'], 'trang_thai' => ['nullable', 'in:cho_xac_nhan,da_xac_nhan,da_huy'], 'trang_thai_thanh_toan' => ['nullable', 'in:chua_thanh_toan,da_thanh_toan']], ['trang_thai.in' => 'Trạng thái đặt phòng không hợp lệ.', 'trang_thai_thanh_toan.in' => 'Trạng thái thanh toán không hợp lệ.']);
+        $validator = Validator::make($request->query(), ['tim_kiem' => ['nullable', 'string', 'max:255'], 'trang_thai' => ['nullable', 'in:cho_xac_nhan,da_xac_nhan,da_huy'], 'trang_thai_thanh_toan' => ['nullable', 'in:chua_thanh_toan,da_thanh_toan'], 'page' => ['nullable', 'integer', 'min:1'], 'per_page' => ['nullable', 'integer', 'min:1', 'max:50']], ['trang_thai.in' => 'Trạng thái đặt phòng không hợp lệ.', 'trang_thai_thanh_toan.in' => 'Trạng thái thanh toán không hợp lệ.', 'page.integer' => 'Trang không hợp lệ.', 'per_page.integer' => 'Số bản ghi mỗi trang không hợp lệ.']);
         if ($validator->fails())
             return $this->loiValidation($validator->errors());
         $d = $validator->validated();
         $tuKhoa = trim((string) ($d['tim_kiem'] ?? ''));
-        $data = $this->truyVan()->when($tuKhoa !== '', fn($q) => $q->where(fn($x) => $x->where('dp.ma_dat_phong', 'like', "%{$tuKhoa}%")->orWhere('dp.ten_khach_hang', 'like', "%{$tuKhoa}%")->orWhere('dp.email_khach_hang', 'like', "%{$tuKhoa}%")->orWhere('dp.so_dien_thoai', 'like', "%{$tuKhoa}%")))->when(isset($d['trang_thai']), fn($q) => $q->where('dp.trang_thai', $d['trang_thai']))->when(isset($d['trang_thai_thanh_toan']), fn($q) => $q->where('tt.trang_thai_thanh_toan', $d['trang_thai_thanh_toan']))->orderByDesc('dp.created_at')->get()->map(fn($row) => $this->dinhDang($row));
-        return response()->json(['success' => true, 'message' => 'Lấy danh sách đặt phòng thành công.', 'data' => $data], options: JSON_UNESCAPED_UNICODE);
+        $paginator = $this->truyVan()->when($tuKhoa !== '', fn($q) => $q->where(fn($x) => $x->where('dp.ma_dat_phong', 'like', "%{$tuKhoa}%")->orWhere('dp.ten_khach_hang', 'like', "%{$tuKhoa}%")->orWhere('dp.email_khach_hang', 'like', "%{$tuKhoa}%")->orWhere('dp.so_dien_thoai', 'like', "%{$tuKhoa}%")))->when(isset($d['trang_thai']), fn($q) => $q->where('dp.trang_thai', $d['trang_thai']))->when(isset($d['trang_thai_thanh_toan']), fn($q) => $q->where('tt.trang_thai_thanh_toan', $d['trang_thai_thanh_toan']))->orderByDesc('dp.created_at')->paginate($d['per_page'] ?? 10);
+        return response()->json(['success' => true, 'message' => 'Lấy danh sách đặt phòng thành công.', 'data' => collect($paginator->items())->map(fn($row) => $this->dinhDang($row)), 'pagination' => $this->phanTrang($paginator)], options: JSON_UNESCAPED_UNICODE);
     }
 
     #[OA\Get(path: '/api/admin/dat-phong/{id}', summary: 'Lấy chi tiết đặt phòng quản trị', tags: ['Quản trị - Đặt phòng'], security: [['sanctum' => []]], parameters: [new OA\Parameter(name: 'id', in: 'path', required: true, schema: new OA\Schema(type: 'integer'))], responses: [new OA\Response(response: 200, description: 'Lấy chi tiết đặt phòng thành công'), new OA\Response(response: 404, description: 'Không tìm thấy đặt phòng')])]
@@ -84,7 +84,25 @@ class AdminDatPhongController extends Controller
     private function lay(int $id): ?object
     {
         $row = $this->truyVan()->where('dp.id', $id)->first();
-        return $row ? $this->dinhDang($row) : null;
+        if (!$row) return null;
+        $row = $this->dinhDang($row);
+        $dichVu = DB::table('dich_vu_dat_phong as dvdp')
+            ->leftJoin('dich_vu as dv', 'dv.id', '=', 'dvdp.dich_vu_id')
+            ->where('dvdp.dat_phong_id', $row->id)
+            ->select(['dvdp.dich_vu_id', 'dv.ten_dich_vu', 'dvdp.so_luong', 'dvdp.don_gia'])
+            ->get()
+            ->map(function ($item) {
+                $item->so_luong = (int) $item->so_luong;
+                $item->don_gia = (float) $item->don_gia;
+                $item->thanh_tien = $item->so_luong * $item->don_gia;
+                return $item;
+            })
+            ->values();
+        $tienDichVu = $dichVu->sum('thanh_tien');
+        $row->dich_vu = $dichVu;
+        $row->tien_dich_vu = (float) $tienDichVu;
+        $row->tien_phong = max(0, $row->tong_tien - $tienDichVu);
+        return $row;
     }
     private function dinhDang(object $row): object
     {
@@ -108,4 +126,5 @@ class AdminDatPhongController extends Controller
     {
         return response()->json(['success' => false, 'message' => 'Không tìm thấy đặt phòng.', 'data' => null], 404, options: JSON_UNESCAPED_UNICODE);
     }
+    private function phanTrang($paginator): array { return ['current_page' => $paginator->currentPage(), 'last_page' => $paginator->lastPage(), 'per_page' => $paginator->perPage(), 'total' => $paginator->total()]; }
 }

@@ -10,6 +10,11 @@ use App\Http\Controllers\Api\AdminLoaiPhongController;
 use App\Http\Controllers\Api\AdminDatPhongController;
 use App\Http\Controllers\Api\LoaiPhongController;
 use App\Http\Controllers\Api\PhongController;
+use App\Http\Controllers\Api\HoSoController;
+use App\Http\Controllers\Api\AdminNguoiDungController;
+use App\Http\Controllers\Api\AdminDichVuController;
+use App\Http\Controllers\Api\LienHeController;
+use App\Http\Controllers\Api\AdminLienHeController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/loai-phong', [LoaiPhongController::class, 'index']);
@@ -17,18 +22,22 @@ Route::get('/phong', [PhongController::class, 'index']);
 Route::get('/phong/tim-kiem', [PhongController::class, 'timKiem']);
 Route::get('/phong/{id}', [PhongController::class, 'show']);
 Route::get('/dich-vu', [DichVuController::class, 'index']);
+Route::post('/lien-he', [LienHeController::class, 'store']);
 Route::post('/dat-phong', [DatPhongController::class, 'store']);
 Route::post('/auth/dang-ky', [AuthController::class, 'dangKy']);
 Route::post('/auth/dang-nhap', [AuthController::class, 'dangNhap']);
-Route::middleware('auth:sanctum')->group(function () {
+Route::middleware(['auth:sanctum', 'tai_khoan_hoat_dong'])->group(function () {
     Route::get('/auth/thong-tin', [AuthController::class, 'thongTin']);
     Route::post('/auth/dang-xuat', [AuthController::class, 'dangXuat']);
+    Route::get('/ho-so', [HoSoController::class, 'show']);
+    Route::put('/ho-so', [HoSoController::class, 'update']);
+    Route::put('/ho-so/doi-mat-khau', [HoSoController::class, 'doiMatKhau']);
     Route::get('/dat-phong-cua-toi', [DatPhongCuaToiController::class, 'index']);
     Route::get('/dat-phong-cua-toi/{id}', [DatPhongCuaToiController::class, 'show'])->whereNumber('id');
     Route::put('/dat-phong-cua-toi/{id}/huy', [DatPhongCuaToiController::class, 'huy'])->whereNumber('id');
 });
 
-Route::middleware(['auth:sanctum', 'admin'])->group(function () {
+Route::middleware(['auth:sanctum', 'tai_khoan_hoat_dong', 'admin'])->group(function () {
     Route::get('/admin/dashboard', [AdminDashboardController::class, 'index']);
     Route::get('/admin/phong', [AdminPhongController::class, 'index']);
     Route::post('/admin/phong', [AdminPhongController::class, 'store']);
@@ -47,4 +56,16 @@ Route::middleware(['auth:sanctum', 'admin'])->group(function () {
     Route::put('/admin/dat-phong/{id}/xac-nhan', [AdminDatPhongController::class, 'xacNhan'])->whereNumber('id');
     Route::put('/admin/dat-phong/{id}/huy', [AdminDatPhongController::class, 'huy'])->whereNumber('id');
     Route::put('/admin/dat-phong/{id}/xac-nhan-thanh-toan', [AdminDatPhongController::class, 'xacNhanThanhToan'])->whereNumber('id');
+    Route::get('/admin/nguoi-dung', [AdminNguoiDungController::class, 'index']);
+    Route::get('/admin/nguoi-dung/{id}', [AdminNguoiDungController::class, 'show'])->whereNumber('id');
+    Route::put('/admin/nguoi-dung/{id}/trang-thai', [AdminNguoiDungController::class, 'capNhatTrangThai'])->whereNumber('id');
+    Route::get('/admin/dich-vu', [AdminDichVuController::class, 'index']);
+    Route::post('/admin/dich-vu', [AdminDichVuController::class, 'store']);
+    Route::get('/admin/dich-vu/{id}', [AdminDichVuController::class, 'show'])->whereNumber('id');
+    Route::put('/admin/dich-vu/{id}', [AdminDichVuController::class, 'update'])->whereNumber('id');
+    Route::put('/admin/dich-vu/{id}/ngung-hoat-dong', [AdminDichVuController::class, 'ngungHoatDong'])->whereNumber('id');
+    Route::put('/admin/dich-vu/{id}/kich-hoat', [AdminDichVuController::class, 'kichHoat'])->whereNumber('id');
+    Route::get('/admin/lien-he', [AdminLienHeController::class, 'index']);
+    Route::get('/admin/lien-he/{id}', [AdminLienHeController::class, 'show'])->whereNumber('id');
+    Route::put('/admin/lien-he/{id}/trang-thai', [AdminLienHeController::class, 'updateStatus'])->whereNumber('id');
 });

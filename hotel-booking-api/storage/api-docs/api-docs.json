@@ -44,6 +44,10 @@
                                                     "type": "integer",
                                                     "example": 8
                                                 },
+                                                "so_phong_dang_co_khach": {
+                                                    "type": "integer",
+                                                    "example": 0
+                                                },
                                                 "tong_so_dat_phong": {
                                                     "type": "integer",
                                                     "example": 5
@@ -51,6 +55,10 @@
                                                 "so_dat_phong_cho_xac_nhan": {
                                                     "type": "integer",
                                                     "example": 3
+                                                },
+                                                "so_dat_phong_da_xac_nhan": {
+                                                    "type": "integer",
+                                                    "example": 1
                                                 },
                                                 "so_dat_phong_da_huy": {
                                                     "type": "integer",
@@ -63,6 +71,16 @@
                                                 "doanh_thu_du_kien": {
                                                     "type": "number",
                                                     "example": 5400000
+                                                },
+                                                "doanh_thu_thuc_te": {
+                                                    "type": "number",
+                                                    "example": 1500000
+                                                },
+                                                "dat_phong_gan_day": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "object"
+                                                    }
                                                 }
                                             },
                                             "type": "object"
@@ -114,6 +132,21 @@
                         "in": "query",
                         "schema": {
                             "type": "string"
+                        }
+                    },
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer",
+                            "maximum": 50
                         }
                     }
                 ],
@@ -272,6 +305,318 @@
                 ]
             }
         },
+        "/api/admin/dich-vu": {
+            "get": {
+                "tags": [
+                    "Quản trị - Dịch vụ"
+                ],
+                "summary": "Lấy danh sách dịch vụ quản trị",
+                "operationId": "4de847f2109c1cad5157e49159c109cd",
+                "responses": {
+                    "200": {
+                        "description": "Thành công"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Quản trị - Dịch vụ"
+                ],
+                "summary": "Thêm dịch vụ",
+                "operationId": "f9d5789ac7f98030975491814efbac35",
+                "responses": {
+                    "201": {
+                        "description": "Thành công"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/admin/dich-vu/{id}": {
+            "get": {
+                "tags": [
+                    "Quản trị - Dịch vụ"
+                ],
+                "summary": "Lấy chi tiết dịch vụ",
+                "operationId": "aa55119adaa26251ff45a4e40ccfea8e",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Thành công"
+                    },
+                    "404": {
+                        "description": "Không tìm thấy dịch vụ"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Quản trị - Dịch vụ"
+                ],
+                "summary": "Cập nhật dịch vụ",
+                "operationId": "0db91423d9bab7ea76a82412abac1e20",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Thành công"
+                    },
+                    "404": {
+                        "description": "Không tìm thấy dịch vụ"
+                    },
+                    "422": {
+                        "description": "Dữ liệu không hợp lệ"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/admin/dich-vu/{id}/ngung-hoat-dong": {
+            "put": {
+                "tags": [
+                    "Quản trị - Dịch vụ"
+                ],
+                "summary": "Ngừng hoạt động dịch vụ",
+                "operationId": "fa72961650b6863fc694d1acde7dfc38",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Thành công"
+                    },
+                    "404": {
+                        "description": "Không tìm thấy dịch vụ"
+                    },
+                    "422": {
+                        "description": "Không thể cập nhật trạng thái"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/admin/dich-vu/{id}/kich-hoat": {
+            "put": {
+                "tags": [
+                    "Quản trị - Dịch vụ"
+                ],
+                "summary": "Kích hoạt lại dịch vụ",
+                "operationId": "07b8d7e07d38ada3a8be56d4cb05e57a",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Thành công"
+                    },
+                    "404": {
+                        "description": "Không tìm thấy dịch vụ"
+                    },
+                    "422": {
+                        "description": "Không thể cập nhật trạng thái"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/admin/lien-he": {
+            "get": {
+                "tags": [
+                    "Quản trị - Liên hệ"
+                ],
+                "summary": "Lấy danh sách liên hệ",
+                "operationId": "60ea007fc1191010fe58e7f92933ebdf",
+                "parameters": [
+                    {
+                        "name": "tim_kiem",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "trang_thai",
+                        "in": "query",
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "chua_xu_ly",
+                                "da_xu_ly"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Thành công"
+                    },
+                    "401": {
+                        "description": "Chưa xác thực"
+                    },
+                    "403": {
+                        "description": "Không có quyền quản trị"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/admin/lien-he/{id}": {
+            "get": {
+                "tags": [
+                    "Quản trị - Liên hệ"
+                ],
+                "summary": "Lấy chi tiết liên hệ",
+                "operationId": "addfb003f414dcf2f186d9f5f93ee57c",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Thành công"
+                    },
+                    "404": {
+                        "description": "Không tìm thấy liên hệ"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/admin/lien-he/{id}/trang-thai": {
+            "put": {
+                "tags": [
+                    "Quản trị - Liên hệ"
+                ],
+                "summary": "Cập nhật trạng thái liên hệ",
+                "operationId": "f8cfbe0a72a20a93c478de15089a6c37",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "trang_thai"
+                                ],
+                                "properties": {
+                                    "trang_thai": {
+                                        "type": "string",
+                                        "enum": [
+                                            "chua_xu_ly",
+                                            "da_xu_ly"
+                                        ]
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Thành công"
+                    },
+                    "404": {
+                        "description": "Không tìm thấy liên hệ"
+                    },
+                    "422": {
+                        "description": "Dữ liệu không hợp lệ"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
         "/api/admin/loai-phong": {
             "get": {
                 "tags": [
@@ -285,6 +630,21 @@
                         "in": "query",
                         "schema": {
                             "type": "string"
+                        }
+                    },
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer",
+                            "maximum": 50
                         }
                     }
                 ],
@@ -516,6 +876,124 @@
                 ]
             }
         },
+        "/api/admin/nguoi-dung": {
+            "get": {
+                "tags": [
+                    "Quản trị - Người dùng"
+                ],
+                "summary": "Lấy danh sách người dùng quản trị",
+                "operationId": "48a5034219d168ba3b08979906c1a703",
+                "parameters": [
+                    {
+                        "name": "tim_kiem",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lấy danh sách người dùng thành công"
+                    },
+                    "401": {
+                        "description": "Chưa xác thực"
+                    },
+                    "403": {
+                        "description": "Không có quyền quản trị"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/admin/nguoi-dung/{id}": {
+            "get": {
+                "tags": [
+                    "Quản trị - Người dùng"
+                ],
+                "summary": "Lấy chi tiết người dùng",
+                "operationId": "86cf09e8f87d3e04fa40822f421a22b0",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lấy chi tiết người dùng thành công"
+                    },
+                    "404": {
+                        "description": "Không tìm thấy người dùng"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/admin/nguoi-dung/{id}/trang-thai": {
+            "put": {
+                "tags": [
+                    "Quản trị - Người dùng"
+                ],
+                "summary": "Khóa hoặc mở khóa người dùng",
+                "operationId": "f2320a486f842debb95a7bdf7bb48a79",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "trang_thai"
+                                ],
+                                "properties": {
+                                    "trang_thai": {
+                                        "type": "string",
+                                        "enum": [
+                                            "hoat_dong",
+                                            "bi_khoa"
+                                        ]
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Cập nhật trạng thái thành công"
+                    },
+                    "422": {
+                        "description": "Dữ liệu không hợp lệ"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
         "/api/admin/phong": {
             "get": {
                 "tags": [
@@ -529,6 +1007,23 @@
                         "in": "query",
                         "schema": {
                             "type": "string"
+                        }
+                    },
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer",
+                            "maximum": 50,
+                            "minimum": 1
                         }
                     }
                 ],
@@ -927,6 +1422,13 @@
                                         "example": "Nhận phòng muộn",
                                         "nullable": true
                                     },
+                                    "dich_vu_ids": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "integer"
+                                        },
+                                        "nullable": true
+                                    },
                                     "phuong_thuc_thanh_toan": {
                                         "description": "Phương thức thanh toán. Hiện tại hỗ trợ thanh toán tại khách sạn.",
                                         "type": "string",
@@ -1024,6 +1526,22 @@
                 "summary": "Lấy danh sách đặt phòng của tôi",
                 "description": "Chỉ trả về các đặt phòng thuộc người dùng đang được xác thực bởi Bearer token Sanctum.",
                 "operationId": "9309a3ad924047d98a071129bf6137d8",
+                "parameters": [
+                    {
+                        "name": "phan_loai_luu_tru",
+                        "in": "query",
+                        "description": "Lọc theo trạng thái lưu trú",
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "sap_toi",
+                                "dang_luu_tru",
+                                "da_hoan_thanh",
+                                "da_huy"
+                            ]
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "Lấy danh sách đặt phòng thành công",
@@ -1074,6 +1592,34 @@
                                                     "tong_tien": {
                                                         "type": "number",
                                                         "example": 1600000
+                                                    },
+                                                    "tien_phong": {
+                                                        "type": "number",
+                                                        "example": 1400000
+                                                    },
+                                                    "tien_dich_vu": {
+                                                        "type": "number",
+                                                        "example": 200000
+                                                    },
+                                                    "dich_vu": {
+                                                        "type": "array",
+                                                        "items": {
+                                                            "properties": {
+                                                                "ten_dich_vu": {
+                                                                    "type": "string",
+                                                                    "example": "Ăn sáng"
+                                                                },
+                                                                "so_luong": {
+                                                                    "type": "integer",
+                                                                    "example": 1
+                                                                },
+                                                                "don_gia": {
+                                                                    "type": "number",
+                                                                    "example": 100000
+                                                                }
+                                                            },
+                                                            "type": "object"
+                                                        }
                                                     },
                                                     "trang_thai": {
                                                         "type": "string",
@@ -1330,6 +1876,173 @@
                                 }
                             }
                         }
+                    }
+                }
+            }
+        },
+        "/api/ho-so": {
+            "get": {
+                "tags": [
+                    "Tài khoản"
+                ],
+                "summary": "Lấy hồ sơ cá nhân",
+                "operationId": "69c08e5f9516b9771af57e47c9476c91",
+                "responses": {
+                    "200": {
+                        "description": "Lấy hồ sơ thành công"
+                    },
+                    "401": {
+                        "description": "Chưa xác thực"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Tài khoản"
+                ],
+                "summary": "Cập nhật hồ sơ cá nhân",
+                "operationId": "ef61d362303ddce0c83703aad801e4fb",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "ho_ten"
+                                ],
+                                "properties": {
+                                    "ho_ten": {
+                                        "type": "string"
+                                    },
+                                    "so_dien_thoai": {
+                                        "type": "string",
+                                        "nullable": true
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Cập nhật hồ sơ thành công"
+                    },
+                    "422": {
+                        "description": "Dữ liệu không hợp lệ"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/ho-so/doi-mat-khau": {
+            "put": {
+                "tags": [
+                    "Tài khoản"
+                ],
+                "summary": "Đổi mật khẩu",
+                "operationId": "eb67521930c9671db199afc5cd12fbf8",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "mat_khau_hien_tai",
+                                    "mat_khau_moi",
+                                    "xac_nhan_mat_khau_moi"
+                                ],
+                                "properties": {
+                                    "mat_khau_hien_tai": {
+                                        "type": "string",
+                                        "format": "password"
+                                    },
+                                    "mat_khau_moi": {
+                                        "type": "string",
+                                        "format": "password"
+                                    },
+                                    "xac_nhan_mat_khau_moi": {
+                                        "type": "string",
+                                        "format": "password"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Đổi mật khẩu thành công"
+                    },
+                    "422": {
+                        "description": "Dữ liệu không hợp lệ"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/lien-he": {
+            "post": {
+                "tags": [
+                    "Liên hệ"
+                ],
+                "summary": "Gửi liên hệ",
+                "operationId": "4a88d58f84d31adda35807bba25be1b3",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "ho_ten",
+                                    "email",
+                                    "tieu_de",
+                                    "noi_dung"
+                                ],
+                                "properties": {
+                                    "ho_ten": {
+                                        "type": "string"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email"
+                                    },
+                                    "so_dien_thoai": {
+                                        "type": "string",
+                                        "nullable": true
+                                    },
+                                    "tieu_de": {
+                                        "type": "string"
+                                    },
+                                    "noi_dung": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Gửi liên hệ thành công"
+                    },
+                    "422": {
+                        "description": "Dữ liệu không hợp lệ"
                     }
                 }
             }
@@ -1658,8 +2371,20 @@
             "description": "Quản trị - Đặt phòng"
         },
         {
+            "name": "Quản trị - Dịch vụ",
+            "description": "Quản trị - Dịch vụ"
+        },
+        {
+            "name": "Quản trị - Liên hệ",
+            "description": "Quản trị - Liên hệ"
+        },
+        {
             "name": "Quản trị - Loại phòng",
             "description": "Quản trị - Loại phòng"
+        },
+        {
+            "name": "Quản trị - Người dùng",
+            "description": "Quản trị - Người dùng"
         },
         {
             "name": "Quản trị - Phòng",
@@ -1676,6 +2401,14 @@
         {
             "name": "Dịch vụ",
             "description": "Dịch vụ"
+        },
+        {
+            "name": "Tài khoản",
+            "description": "Tài khoản"
+        },
+        {
+            "name": "Liên hệ",
+            "description": "Liên hệ"
         },
         {
             "name": "Loại phòng",

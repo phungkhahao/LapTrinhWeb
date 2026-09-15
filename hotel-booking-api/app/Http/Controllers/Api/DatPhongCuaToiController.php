@@ -16,6 +16,7 @@ class DatPhongCuaToiController extends Controller
         description: 'Chỉ trả về các đặt phòng thuộc người dùng đang được xác thực bởi Bearer token Sanctum.',
         tags: ['Đặt phòng'],
         security: [['sanctum' => []]],
+        parameters: [new OA\Parameter(name: 'phan_loai_luu_tru', in: 'query', description: 'Lọc theo trạng thái lưu trú', schema: new OA\Schema(type: 'string', enum: ['sap_toi', 'dang_luu_tru', 'da_hoan_thanh', 'da_huy']))],
         responses: [
             new OA\Response(
                 response: 200,
@@ -33,6 +34,13 @@ class DatPhongCuaToiController extends Controller
                             new OA\Property(property: 'ngay_tra_phong', type: 'string', format: 'date'),
                             new OA\Property(property: 'so_luong_khach', type: 'integer', example: 2),
                             new OA\Property(property: 'tong_tien', type: 'number', example: 1600000),
+                            new OA\Property(property: 'tien_phong', type: 'number', example: 1400000),
+                            new OA\Property(property: 'tien_dich_vu', type: 'number', example: 200000),
+                            new OA\Property(property: 'dich_vu', type: 'array', items: new OA\Items(type: 'object', properties: [
+                                new OA\Property(property: 'ten_dich_vu', type: 'string', example: 'Ăn sáng'),
+                                new OA\Property(property: 'so_luong', type: 'integer', example: 1),
+                                new OA\Property(property: 'don_gia', type: 'number', example: 100000),
+                            ])),
                             new OA\Property(property: 'trang_thai', type: 'string', example: 'cho_xac_nhan'),
                             new OA\Property(property: 'phuong_thuc_thanh_toan', type: 'string', example: 'tai_khach_san'),
                             new OA\Property(property: 'trang_thai_thanh_toan', type: 'string', example: 'chua_thanh_toan'),
@@ -46,10 +54,20 @@ class DatPhongCuaToiController extends Controller
     )]
     public function index(Request $request): JsonResponse
     {
+        $validator = \Illuminate\Support\Facades\Validator::make($request->query(), [
+            'phan_loai_luu_tru' => ['nullable', 'in:sap_toi,dang_luu_tru,da_hoan_thanh,da_huy'],
+        ], ['phan_loai_luu_tru.in' => 'Bộ lọc trạng thái không hợp lệ.']);
+        if ($validator->fails()) return response()->json(['success' => false, 'message' => 'Dữ liệu không hợp lệ.', 'errors' => $validator->errors()], 422, options: JSON_UNESCAPED_UNICODE);
+
+        $phanLoai = $validator->validated()['phan_loai_luu_tru'] ?? null;
         $datPhong = DB::table('dat_phong as dp')
             ->join('phong as p', 'p.id', '=', 'dp.phong_id')
             ->leftJoin('thanh_toan as tt', 'tt.dat_phong_id', '=', 'dp.id')
             ->where('dp.nguoi_dung_id', $request->user()->id)
+            ->when($phanLoai === 'da_huy', fn ($query) => $query->where('dp.trang_thai', 'da_huy'))
+            ->when($phanLoai === 'sap_toi', fn ($query) => $query->where('dp.trang_thai', '!=', 'da_huy')->whereDate('dp.ngay_nhan_phong', '>', today()))
+            ->when($phanLoai === 'dang_luu_tru', fn ($query) => $query->where('dp.trang_thai', '!=', 'da_huy')->whereDate('dp.ngay_nhan_phong', '<=', today())->whereDate('dp.ngay_tra_phong', '>', today()))
+            ->when($phanLoai === 'da_hoan_thanh', fn ($query) => $query->where('dp.trang_thai', '!=', 'da_huy')->whereDate('dp.ngay_tra_phong', '<=', today()))
             ->orderByDesc('dp.created_at')
             ->select([
                 'dp.id',
@@ -65,6 +83,7 @@ class DatPhongCuaToiController extends Controller
                 'tt.phuong_thuc_thanh_toan',
                 'tt.trang_thai_thanh_toan',
                 'dp.created_at',
+                DB::raw("CASE WHEN dp.trang_thai = 'da_huy' THEN 'da_huy' WHEN dp.ngay_nhan_phong > CURDATE() THEN 'sap_toi' WHEN dp.ngay_tra_phong > CURDATE() THEN 'dang_luu_tru' ELSE 'da_hoan_thanh' END as phan_loai_luu_tru"),
             ])
             ->get();
 
@@ -151,6 +170,23 @@ class DatPhongCuaToiController extends Controller
                 'data' => null,
             ], 404, options: JSON_UNESCAPED_UNICODE);
         }
+
+        $dichVu = DB::table('dich_vu_dat_phong as dvdp')
+            ->leftJoin('dich_vu as dv', 'dv.id', '=', 'dvdp.dich_vu_id')
+            ->where('dvdp.dat_phong_id', $datPhong->id)
+            ->select(['dvdp.dich_vu_id', 'dv.ten_dich_vu', 'dvdp.so_luong', 'dvdp.don_gia'])
+            ->get()
+            ->map(function ($item) {
+                $item->so_luong = (int) $item->so_luong;
+                $item->don_gia = (float) $item->don_gia;
+                $item->thanh_tien = $item->so_luong * $item->don_gia;
+                return $item;
+            })
+            ->values();
+        $tienDichVu = $dichVu->sum('thanh_tien');
+        $datPhong->dich_vu = $dichVu;
+        $datPhong->tien_dich_vu = (float) $tienDichVu;
+        $datPhong->tien_phong = max(0, (float) $datPhong->tong_tien - $tienDichVu);
 
         return response()->json([
             'success' => true,

@@ -1,10 +1,11 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Footer from "../components/Footer";
 import Header from "../components/Header";
 import { getDatPhongCuaToi } from "../api/hotel_booking_api";
 import { useAuth } from "../context/AuthContext";
 import { formatDate } from "../utils/format";
+import ReactSelect from "../components/ReactSelect";
 
 const dinhDangTien = new Intl.NumberFormat("vi-VN");
 const nhanTrangThaiDatPhong = (trangThai) =>
@@ -24,12 +25,13 @@ function DatPhongCuaToi() {
   const [danhSachDatPhong, setDanhSachDatPhong] = useState([]);
   const [dangTai, setDangTai] = useState(true);
   const [loi, setLoi] = useState(null);
+  const [phanLoai, setPhanLoai] = useState("");
 
-  const taiDanhSachDatPhong = async () => {
+  const taiDanhSachDatPhong = useCallback(async () => {
     try {
       setDangTai(true);
       setLoi(null);
-      const response = await getDatPhongCuaToi();
+      const response = await getDatPhongCuaToi({ phan_loai_luu_tru: phanLoai || undefined });
       if (!response.success) throw new Error(response.message);
       setDanhSachDatPhong(response.data);
     } catch (error) {
@@ -38,7 +40,7 @@ function DatPhongCuaToi() {
     } finally {
       setDangTai(false);
     }
-  };
+  }, [phanLoai]);
 
   useEffect(() => {
     if (!loadingAuth && !isAuthenticated)
@@ -47,7 +49,7 @@ function DatPhongCuaToi() {
 
   useEffect(() => {
     if (isAuthenticated) taiDanhSachDatPhong();
-  }, [isAuthenticated]);
+  }, [isAuthenticated, taiDanhSachDatPhong]);
 
   if (loadingAuth || !isAuthenticated) {
     return (
@@ -68,12 +70,16 @@ function DatPhongCuaToi() {
     <>
       <Header />
       <main className="rooms-section min-vh-100 py-5">
-        <div className="container">
+        <div className="container my-bookings-container">
           <header className="my-bookings-head">
             <p className="section-kicker">LỊCH SỬ LƯU TRÚ</p>
             <h1>Đặt phòng của tôi</h1>
             <p>Theo dõi các đặt phòng và thông tin lưu trú của bạn.</p>
           </header>
+          <div className="my-bookings-filter">
+            <label htmlFor="booking-status">Lọc theo trạng thái</label>
+            <ReactSelect inputId="booking-status" value={phanLoai} onChange={setPhanLoai} isClearable placeholder="Tất cả đặt phòng" options={[{ value: "sap_toi", label: "Sắp tới" }, { value: "dang_luu_tru", label: "Đang lưu trú" }, { value: "da_hoan_thanh", label: "Đã hoàn thành" }, { value: "da_huy", label: "Đã hủy" }]} />
+          </div>
 
           {dangTai && (
             <div className="my-booking-skeletons">

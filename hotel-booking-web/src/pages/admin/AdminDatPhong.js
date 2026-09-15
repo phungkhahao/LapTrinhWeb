@@ -10,6 +10,7 @@ import {
 import AdminLayout from "../../components/admin/AdminLayout";
 import AdminIcon from "../../components/admin/AdminIcon";
 import ReactSelect from "../../components/ReactSelect";
+import AdminPagination from "../../components/admin/AdminPagination";
 import { formatDate, formatDateTime } from "../../utils/format";
 import "../../styles/admin-phong.css";
 
@@ -35,7 +36,8 @@ function AdminDatPhong() {
   const [loi, setLoi] = useState("");
   const [chiTiet, setChiTiet] = useState(null);
   const [dangTaiChiTiet, setDangTaiChiTiet] = useState(false);
-  const taiDanhSach = useCallback(async () => {
+  const [pagination, setPagination] = useState(null);
+  const taiDanhSach = useCallback(async (page = 1) => {
     try {
       setDangTai(true);
       setLoi("");
@@ -43,9 +45,11 @@ function AdminDatPhong() {
         tim_kiem: timKiem,
         trang_thai: trangThai,
         trang_thai_thanh_toan: thanhToan,
+        page,
       });
       if (!r.success) throw new Error(r.message);
       setDanhSach(r.data || []);
+      setPagination(r.pagination || null);
     } catch (e) {
       setLoi(loiTuApi(e));
     } finally {
@@ -53,7 +57,7 @@ function AdminDatPhong() {
     }
   }, [timKiem, trangThai, thanhToan]);
   useEffect(() => {
-    taiDanhSach();
+    taiDanhSach(1);
   }, [taiDanhSach]);
   const xemChiTiet = async (id) => {
     try {
@@ -181,6 +185,7 @@ function AdminDatPhong() {
         )}
     </div>
   );
+  const phanTrangView = AdminPagination({ pagination, onPageChange: taiDanhSach });
   return (
     <AdminLayout title="Quản lý đặt phòng" activeMenu="dat-phong">
       <main className="admin-content">
@@ -334,6 +339,7 @@ function AdminDatPhong() {
             </div>
           </>
         )}
+        {!dangTai && !loi && phanTrangView}
       </main>
       {chiTiet && (
         <div className="admin-modal-backdrop">
@@ -394,8 +400,25 @@ function AdminDatPhong() {
                       : "Chưa thu tiền"}
                   </p>
                 </section>
+                <section className="admin-detail-full admin-booking-services">
+                  <h3>Dịch vụ bổ sung</h3>
+                  {(chiTiet.dich_vu || []).length === 0 ? (
+                    <p>Không sử dụng dịch vụ bổ sung.</p>
+                  ) : (
+                    <div className="admin-service-lines">
+                      {chiTiet.dich_vu.map((dichVu) => (
+                        <div key={dichVu.dich_vu_id}>
+                          <strong>{dichVu.ten_dich_vu || "Dịch vụ đã chọn"}</strong>
+                          <span>{dichVu.so_luong} × {tien.format(dichVu.don_gia)} VNĐ</span>
+                          <b>{tien.format(dichVu.thanh_tien)} VNĐ</b>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </section>
                 <section>
-                  <h3>Tổng tiền</h3>
+                  <h3>Tổng thanh toán</h3>
+                  <p className="admin-detail-breakdown">Tiền phòng <b>{tien.format(chiTiet.tien_phong ?? chiTiet.tong_tien)} VNĐ</b><br />Tiền dịch vụ <b>{tien.format(chiTiet.tien_dich_vu || 0)} VNĐ</b></p>
                   <strong className="admin-detail-money">
                     {tien.format(chiTiet.tong_tien)} VNĐ
                   </strong>

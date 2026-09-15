@@ -11,6 +11,7 @@ import {
 import AdminLayout from "../../components/admin/AdminLayout";
 import AdminIcon from "../../components/admin/AdminIcon";
 import ReactSelect from "../../components/ReactSelect";
+import AdminPagination from "../../components/admin/AdminPagination";
 import "../../styles/admin-phong.css";
 
 const macDinh = {
@@ -41,14 +42,16 @@ function AdminPhong() {
   const [tepAnh, setTepAnh] = useState(null);
   const [anhXemTruoc, setAnhXemTruoc] = useState("");
   const [dangLuu, setDangLuu] = useState(false);
+  const [pagination, setPagination] = useState(null);
 
-  const taiDanhSach = useCallback(async () => {
+  const taiDanhSach = useCallback(async (page = 1) => {
     try {
       setDangTai(true);
       setLoi("");
-      const r = await getAdminPhong({ tim_kiem: timKiem });
+      const r = await getAdminPhong({ tim_kiem: timKiem, page });
       if (!r.success) throw new Error(r.message);
       setPhong(r.data || []);
+      setPagination(r.pagination || null);
     } catch (e) {
       setLoi(e.response?.data?.message || "Không thể tải danh sách phòng.");
     } finally {
@@ -56,7 +59,7 @@ function AdminPhong() {
     }
   }, [timKiem]);
   useEffect(() => {
-    taiDanhSach();
+    taiDanhSach(1);
   }, [taiDanhSach]);
   useEffect(() => {
     getDanhSachLoaiPhong()
@@ -400,6 +403,7 @@ function AdminPhong() {
             </table>
           </div>
         )}
+        {!dangTai && !loi && <AdminPagination pagination={pagination} onPageChange={taiDanhSach} />}
       </main>
       {hienForm && (
         <div className="admin-modal-backdrop" role="presentation">

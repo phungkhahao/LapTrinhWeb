@@ -266,9 +266,29 @@ function ChiTietDatPhong() {
               </section>
             </div>
 
+            <section className="booking-detail-card booking-detail-services">
+              <h2>Dịch vụ bổ sung</h2>
+              {(datPhong.dich_vu || []).length === 0 ? (
+                <p>Không sử dụng dịch vụ bổ sung.</p>
+              ) : (
+                <div className="booking-service-list">
+                  {datPhong.dich_vu.map((dichVu) => (
+                    <div className="booking-service-row" key={dichVu.dich_vu_id}>
+                      <strong>{dichVu.ten_dich_vu || "Dịch vụ đã chọn"}</strong>
+                      <span>{dichVu.so_luong} × {dinhDangTien.format(dichVu.don_gia)} VNĐ</span>
+                      <b>{dinhDangTien.format(dichVu.thanh_tien)} VNĐ</b>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </section>
+
             <section className="booking-detail-total">
-              <span>TỔNG TIỀN</span>
-              <strong>{dinhDangTien.format(datPhong.tong_tien)} VNĐ</strong>
+              <div className="booking-total-breakdown">
+                <span>Tiền phòng</span><b>{dinhDangTien.format(datPhong.tien_phong ?? datPhong.tong_tien)} VNĐ</b>
+                <span>Tiền dịch vụ</span><b>{dinhDangTien.format(datPhong.tien_dich_vu || 0)} VNĐ</b>
+              </div>
+              <div><span>TỔNG THANH TOÁN</span><strong>{dinhDangTien.format(datPhong.tong_tien)} VNĐ</strong></div>
             </section>
             {coTheHuy && (
               <div className="booking-cancel-action">

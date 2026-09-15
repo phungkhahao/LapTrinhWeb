@@ -9,6 +9,7 @@ import {
 } from "../../api/hotel_booking_api";
 import AdminLayout from "../../components/admin/AdminLayout";
 import AdminIcon from "../../components/admin/AdminIcon";
+import AdminPagination from "../../components/admin/AdminPagination";
 import "../../styles/admin-phong.css";
 
 const macDinh = {
@@ -33,13 +34,15 @@ function AdminLoaiPhong() {
   const [form, setForm] = useState(macDinh);
   const [loiForm, setLoiForm] = useState({});
   const [dangLuu, setDangLuu] = useState(false);
-  const taiDanhSach = useCallback(async () => {
+  const [pagination, setPagination] = useState(null);
+  const taiDanhSach = useCallback(async (page = 1) => {
     try {
       setDangTai(true);
       setLoi("");
-      const r = await getAdminLoaiPhong({ tim_kiem: timKiem });
+      const r = await getAdminLoaiPhong({ tim_kiem: timKiem, page });
       if (!r.success) throw new Error(r.message);
       setDanhSach(r.data || []);
+      setPagination(r.pagination || null);
     } catch (e) {
       setLoi(
         e.response?.data?.message || "Không thể tải danh sách loại phòng.",
@@ -49,7 +52,7 @@ function AdminLoaiPhong() {
     }
   }, [timKiem]);
   useEffect(() => {
-    taiDanhSach();
+    taiDanhSach(1);
   }, [taiDanhSach]);
   const dongForm = () => {
     setHienForm(false);
@@ -178,6 +181,7 @@ function AdminLoaiPhong() {
   );
   const phanLoi = (name) =>
     loiForm[name] && <div className="invalid-feedback">{loiForm[name]}</div>;
+  const phanTrangView = <AdminPagination pagination={pagination} onPageChange={taiDanhSach} />;
   return (
     <AdminLayout title="Quản lý loại phòng" activeMenu="loai-phong">
       <main className="admin-content">
@@ -304,6 +308,7 @@ function AdminLoaiPhong() {
             </table>
           </div>
         )}
+        {!dangTai && !loi && phanTrangView}
       </main>
       {hienForm && (
         <div className="admin-modal-backdrop" role="presentation">

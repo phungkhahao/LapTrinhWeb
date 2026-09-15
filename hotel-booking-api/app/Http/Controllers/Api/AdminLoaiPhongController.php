@@ -12,15 +12,15 @@ use OpenApi\Attributes as OA;
 
 class AdminLoaiPhongController extends Controller
 {
-    #[OA\Get(path: '/api/admin/loai-phong', summary: 'Lấy danh sách loại phòng quản trị', tags: ['Quản trị - Loại phòng'], security: [['sanctum' => []]], parameters: [new OA\Parameter(name: 'tim_kiem', in: 'query', schema: new OA\Schema(type: 'string'))], responses: [new OA\Response(response: 200, description: 'Lấy danh sách loại phòng thành công'), new OA\Response(response: 401, description: 'Chưa xác thực'), new OA\Response(response: 403, description: 'Không có quyền quản trị')])]
+    #[OA\Get(path: '/api/admin/loai-phong', summary: 'Lấy danh sách loại phòng quản trị', tags: ['Quản trị - Loại phòng'], security: [['sanctum' => []]], parameters: [new OA\Parameter(name: 'tim_kiem', in: 'query', schema: new OA\Schema(type: 'string')), new OA\Parameter(name: 'page', in: 'query', schema: new OA\Schema(type: 'integer')), new OA\Parameter(name: 'per_page', in: 'query', schema: new OA\Schema(type: 'integer', maximum: 50))], responses: [new OA\Response(response: 200, description: 'Lấy danh sách loại phòng thành công'), new OA\Response(response: 401, description: 'Chưa xác thực'), new OA\Response(response: 403, description: 'Không có quyền quản trị')])]
     public function index(Request $request): JsonResponse
     {
-        $validator = Validator::make($request->query(), ['tim_kiem' => ['nullable', 'string', 'max:255']], ['tim_kiem.string' => 'Từ khóa tìm kiếm không hợp lệ.', 'tim_kiem.max' => 'Từ khóa tìm kiếm không được vượt quá 255 ký tự.']);
+        $validator = Validator::make($request->query(), ['tim_kiem' => ['nullable', 'string', 'max:255'], 'page' => ['nullable', 'integer', 'min:1'], 'per_page' => ['nullable', 'integer', 'min:1', 'max:50']], ['tim_kiem.string' => 'Từ khóa tìm kiếm không hợp lệ.', 'tim_kiem.max' => 'Từ khóa tìm kiếm không được vượt quá 255 ký tự.', 'page.integer' => 'Trang không hợp lệ.', 'per_page.integer' => 'Số bản ghi mỗi trang không hợp lệ.']);
         if ($validator->fails())
             return $this->loiValidation($validator->errors());
         $timKiem = trim((string) ($validator->validated()['tim_kiem'] ?? ''));
-        $data = DB::table('loai_phong')->select($this->cot())->when($timKiem !== '', fn($query) => $query->where('ten_loai', 'like', "%{$timKiem}%"))->orderByDesc('created_at')->get()->map(fn($loai) => $this->dinhDang($loai));
-        return response()->json(['success' => true, 'message' => 'Lấy danh sách loại phòng thành công.', 'data' => $data], options: JSON_UNESCAPED_UNICODE);
+        $paginator = DB::table('loai_phong')->select($this->cot())->when($timKiem !== '', fn($query) => $query->where('ten_loai', 'like', "%{$timKiem}%"))->orderByDesc('created_at')->paginate($validator->validated()['per_page'] ?? 10);
+        return response()->json(['success' => true, 'message' => 'Lấy danh sách loại phòng thành công.', 'data' => collect($paginator->items())->map(fn($loai) => $this->dinhDang($loai)), 'pagination' => $this->phanTrang($paginator)], options: JSON_UNESCAPED_UNICODE);
     }
 
     #[OA\Post(path: '/api/admin/loai-phong', summary: 'Thêm loại phòng', tags: ['Quản trị - Loại phòng'], security: [['sanctum' => []]], requestBody: new OA\RequestBody(required: true, content: new OA\JsonContent(required: ['ten_loai', 'gia_co_ban', 'so_nguoi_toi_da'], properties: [new OA\Property(property: 'ten_loai', type: 'string'), new OA\Property(property: 'mo_ta', type: 'string', nullable: true), new OA\Property(property: 'gia_co_ban', type: 'number'), new OA\Property(property: 'so_nguoi_toi_da', type: 'integer')])), responses: [new OA\Response(response: 201, description: 'Thêm loại phòng thành công'), new OA\Response(response: 422, description: 'Dữ liệu không hợp lệ')])]
@@ -112,4 +112,5 @@ class AdminLoaiPhongController extends Controller
     {
         return response()->json(['success' => false, 'message' => 'Không tìm thấy loại phòng.', 'data' => null], 404, options: JSON_UNESCAPED_UNICODE);
     }
+    private function phanTrang($paginator): array { return ['current_page' => $paginator->currentPage(), 'last_page' => $paginator->lastPage(), 'per_page' => $paginator->perPage(), 'total' => $paginator->total()]; }
 }
