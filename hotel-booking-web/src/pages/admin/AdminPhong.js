@@ -98,7 +98,7 @@ function AdminPhong() {
       mo_ta: p.mo_ta || "",
     });
     setTepAnh(null);
-    setAnhXemTruoc(p.hinh_anh || "");
+    setAnhXemTruoc(p.hinh_anh || anhMacDinh(p));
     setLoiForm({});
     setHienForm(true);
   };
