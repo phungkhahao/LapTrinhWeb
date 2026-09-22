@@ -18,14 +18,14 @@ class PhongSeeder extends Seeder
             ->pluck('id', 'ten_loai');
 
         $phongs = [
-            ['so_phong' => '101', 'ten_loai' => 'Phòng Tiêu Chuẩn', 'ten_phong' => 'Phòng Tiêu Chuẩn 101', 'gia_phong' => 500000, 'so_nguoi_toi_da' => 2],
-            ['so_phong' => '102', 'ten_loai' => 'Phòng Tiêu Chuẩn', 'ten_phong' => 'Phòng Tiêu Chuẩn 102', 'gia_phong' => 500000, 'so_nguoi_toi_da' => 2],
-            ['so_phong' => '103', 'ten_loai' => 'Phòng Tiêu Chuẩn', 'ten_phong' => 'Phòng Tiêu Chuẩn 103', 'gia_phong' => 500000, 'so_nguoi_toi_da' => 2],
-            ['so_phong' => '201', 'ten_loai' => 'Phòng Cao Cấp', 'ten_phong' => 'Phòng Cao Cấp 201', 'gia_phong' => 800000, 'so_nguoi_toi_da' => 2],
-            ['so_phong' => '202', 'ten_loai' => 'Phòng Cao Cấp', 'ten_phong' => 'Phòng Cao Cấp 202', 'gia_phong' => 800000, 'so_nguoi_toi_da' => 2],
-            ['so_phong' => '203', 'ten_loai' => 'Phòng Cao Cấp', 'ten_phong' => 'Phòng Cao Cấp 203', 'gia_phong' => 800000, 'so_nguoi_toi_da' => 2],
-            ['so_phong' => '301', 'ten_loai' => 'Phòng Gia Đình', 'ten_phong' => 'Phòng Gia Đình 301', 'gia_phong' => 1200000, 'so_nguoi_toi_da' => 4],
-            ['so_phong' => '302', 'ten_loai' => 'Phòng Gia Đình', 'ten_phong' => 'Phòng Gia Đình 302', 'gia_phong' => 1200000, 'so_nguoi_toi_da' => 4],
+            ['so_phong' => '101', 'ten_loai' => 'Phòng Tiêu Chuẩn', 'ten_phong' => 'Phòng Tiêu Chuẩn 101', 'gia_phong' => 500000, 'so_nguoi_toi_da' => 2, 'hinh_anh' => '/hotel-template/1.jpg'],
+            ['so_phong' => '102', 'ten_loai' => 'Phòng Tiêu Chuẩn', 'ten_phong' => 'Phòng Tiêu Chuẩn 102', 'gia_phong' => 500000, 'so_nguoi_toi_da' => 2, 'hinh_anh' => '/hotel-template/2.jpg'],
+            ['so_phong' => '103', 'ten_loai' => 'Phòng Tiêu Chuẩn', 'ten_phong' => 'Phòng Tiêu Chuẩn 103', 'gia_phong' => 500000, 'so_nguoi_toi_da' => 2, 'hinh_anh' => '/hotel-template/3.jpg'],
+            ['so_phong' => '201', 'ten_loai' => 'Phòng Cao Cấp', 'ten_phong' => 'Phòng Cao Cấp 201', 'gia_phong' => 800000, 'so_nguoi_toi_da' => 2, 'hinh_anh' => '/hotel-template/4.jpg'],
+            ['so_phong' => '202', 'ten_loai' => 'Phòng Cao Cấp', 'ten_phong' => 'Phòng Cao Cấp 202', 'gia_phong' => 800000, 'so_nguoi_toi_da' => 2, 'hinh_anh' => '/hotel-template/5.jpg'],
+            ['so_phong' => '203', 'ten_loai' => 'Phòng Cao Cấp', 'ten_phong' => 'Phòng Cao Cấp 203', 'gia_phong' => 800000, 'so_nguoi_toi_da' => 2, 'hinh_anh' => '/hotel-template/6.jpg'],
+            ['so_phong' => '301', 'ten_loai' => 'Phòng Gia Đình', 'ten_phong' => 'Phòng Gia Đình 301', 'gia_phong' => 1200000, 'so_nguoi_toi_da' => 4, 'hinh_anh' => '/hotel-template/7.jpg'],
+            ['so_phong' => '302', 'ten_loai' => 'Phòng Gia Đình', 'ten_phong' => 'Phòng Gia Đình 302', 'gia_phong' => 1200000, 'so_nguoi_toi_da' => 4, 'hinh_anh' => '/hotel-template/8.jpg'],
         ];
 
         foreach ($phongs as $phong) {
@@ -43,7 +43,7 @@ class PhongSeeder extends Seeder
                     'gia_phong' => $phong['gia_phong'],
                     'so_nguoi_toi_da' => $phong['so_nguoi_toi_da'],
                     'mo_ta' => "{$phong['ten_phong']} có đầy đủ tiện nghi cơ bản.",
-                    'hinh_anh' => null,
+                    'hinh_anh' => $phong['hinh_anh'],
                     'trang_thai' => 'trong',
                 ],
             );
